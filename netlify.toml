@@ -1,0 +1,10 @@
+# Netlify configuration for the NExBMS landing page.
+# The repo root is the publish directory (static files served as-is);
+# serverless functions live under netlify/functions.
+
+[build]
+  publish    = "."
+  functions  = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

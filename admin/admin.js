@@ -10,9 +10,9 @@
   'use strict';
 
   const API = {
-    login:     '../api/login.php',
-    logout:    '../api/logout.php',
-    inquiries: '../api/inquiries.php',
+    login:     '/.netlify/functions/login',
+    logout:    '/.netlify/functions/logout',
+    inquiries: '/.netlify/functions/inquiries',
   };
   const HOME = '../index.html';
 

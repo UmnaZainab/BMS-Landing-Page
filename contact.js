@@ -7,7 +7,7 @@
 (function () {
   const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
   const API_BASE = (window.NEXBMS_API_BASE || '').replace(/\/+$/, '');
-  const ENDPOINT = API_BASE ? API_BASE + '/api/contact.php' : 'api/contact.php';
+  const ENDPOINT = (API_BASE || '') + '/.netlify/functions/contact';
 
   function validate(field) {
     const err = field.parentElement.querySelector('.error'); let msg = '';
