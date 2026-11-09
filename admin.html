@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f7f8fc">
+  <title>Admin · Inquiries | NExBMS</title>
+  <link rel="stylesheet" href="./style.css?v=108">
+  <style>
+    body[data-page="admin"]{background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;margin:0}
+    .admin-wrap{max-width:1200px;margin:0 auto;padding:36px 20px 72px;width:100%;flex:1;box-sizing:border-box}
+    .admin-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+    .admin-head h1{font-size:28px;margin:0;color:var(--ink);letter-spacing:-.01em}
+    .admin-head .sub{color:var(--muted);font-size:14px;margin-top:4px}
+    .admin-actions{display:flex;gap:10px;align-items:center}
+    .brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none;font-size:15px}
+    .brand .dot{width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,var(--primary),var(--primary2))}
+
+    .login-shell{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;box-sizing:border-box}
+    .login-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:34px;width:100%;max-width:420px;box-sizing:border-box}
+    .login-card .brand{margin-bottom:22px}
+    .login-card h1{margin:0 0 6px;font-size:22px}
+    .login-card p.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+    .login-card .field{margin-bottom:14px}
+    .login-card label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+    .login-card input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s;box-sizing:border-box;font-family:inherit}
+    .login-card input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(88,86,235,.14)}
+    .login-card .btn{width:100%;justify-content:center;margin-top:4px}
+    .form-status{margin:12px 0 0;font-size:13.5px;min-height:1.1em}
+    .form-status[data-kind="err"]{color:#c93c3c}
+    .form-status[data-kind="ok"]{color:var(--success)}
+
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid transparent;cursor:pointer;transition:transform .12s,background .15s,border-color .15s,color .15s;font-family:inherit;text-decoration:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px)}
+    .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+    .btn-ghost:hover:not(:disabled){background:var(--soft);border-color:var(--primary)}
+    .btn.sm{padding:8px 14px;font-size:13.5px}
+
+    .table-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+    .table-meta{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+    .table-meta[data-kind="err"]{color:#c93c3c}
+    .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .inq-table{width:100%;border-collapse:collapse;font-size:14px}
+    .inq-table th,.inq-table td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+    .inq-table th{background:var(--soft);font-weight:600;color:var(--ink);font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+    .inq-table tr:last-child td{border-bottom:none}
+    .inq-table tbody tr:hover td{background:var(--soft)}
+    .cell-msg{max-width:360px;color:var(--ink);line-height:1.5;word-break:break-word}
+    .cell-date{color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+    .cell-email a,.cell-phone a{color:var(--primary);text-decoration:none;word-break:break-all}
+    .cell-email a:hover,.cell-phone a:hover{text-decoration:underline}
+    .empty{padding:60px 20px;text-align:center;color:var(--muted);font-size:14px}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media (max-width: 720px){
+      .admin-wrap{padding:24px 14px 48px}
+      .admin-head{flex-direction:column;align-items:stretch}
+      .admin-actions{justify-content:flex-end}
+      .inq-table th,.inq-table td{padding:10px 12px}
+      .cell-msg{max-width:200px}
+    }
+  </style>
+</head>
+<body data-page="admin" data-theme="light">
+  <div id="app" aria-live="polite"></div>
+  <script src="./admin.js?v=1" defer></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "nexum/contact-api",
+  "description": "Contact form backend for the NExBMS landing page.",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.1",
+    "ext-mongodb": "*",
+    "mongodb/mongodb": "^2.0",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}

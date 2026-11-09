@@ -1,0 +1,8 @@
+.env
+vendor/
+composer.lock
+.DS_Store
+Thumbs.db
+
+# Docker local state
+.docker/
