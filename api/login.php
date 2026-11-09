@@ -17,8 +17,8 @@ if (!is_array($data)) {
     respond(400, ['ok' => false, 'detail' => 'Invalid JSON payload.']);
 }
 
-$user = is_string($data['user'] ?? null) ? trim($data['user']) : '';
-$pass = is_string($data['pass'] ?? null) ? $data['pass'] : '';
+$user = is_string($data['user'] ?? null) ? trim($data['user'], "\"' \t\n\r") : '';
+$pass = is_string($data['pass'] ?? null) ? trim($data['pass'], "\"' \t\n\r") : '';
 
 $expectedUser = $_ENV['ADMIN_USER']     ?? '';
 $expectedPass = $_ENV['ADMIN_PASSWORD'] ?? '';

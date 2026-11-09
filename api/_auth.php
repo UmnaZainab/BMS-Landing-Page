@@ -7,6 +7,15 @@ use Dotenv\Dotenv;
 
 Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 
+// Docker Compose env_file / phpdotenv sometimes leave surrounding quotes or
+// trailing whitespace on values. Strip them for keys that are compared
+// character-exactly against user input.
+foreach (['ADMIN_USER', 'ADMIN_PASSWORD'] as $k) {
+    if (isset($_ENV[$k])) {
+        $_ENV[$k] = trim($_ENV[$k], "\"' \t\n\r");
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
