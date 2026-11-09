@@ -1,10 +1,10 @@
 /* Admin dashboard: login card + inquiries table.
- * Served from /admin/ — API paths are relative to the parent directory.
+ * Served from /admin/ with same-origin Netlify Functions.
  * Endpoints (same-origin):
- *   GET  ../api/login.php      -> { ok, authenticated }
- *   POST ../api/login.php      -> { ok, authenticated }
- *   POST ../api/logout.php     -> { ok }
- *   GET  ../api/inquiries.php  -> { ok, items: [...] }
+ *   GET  /.netlify/functions/login      -> { ok, authenticated }
+ *   POST /.netlify/functions/login      -> { ok, authenticated }
+ *   POST /.netlify/functions/logout     -> { ok }
+ *   GET  /.netlify/functions/inquiries  -> { ok, items: [...] }
  */
 (function () {
   'use strict';

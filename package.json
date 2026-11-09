@@ -6,7 +6,10 @@
   "engines": {
     "node": ">=18"
   },
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
-    "mongodb": "^6.0.0"
+    "mongodb": "^6.5.0"
   }
 }

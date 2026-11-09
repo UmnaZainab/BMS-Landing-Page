@@ -1,13 +1,7 @@
-/* Contact Us page: validate inputs, POST to /api/contact, show status.
- *
- * If the landing page is served from a different origin than the API
- * (static host + separate backend), set `window.NEXBMS_API_BASE` before
- * this script loads, e.g. <script>window.NEXBMS_API_BASE="https://api.example.com"</script>.
- * Default is same-origin. */
+/* Contact Us page: validate inputs, POST to the Netlify Function, show status. */
 (function () {
   const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
-  const API_BASE = (window.NEXBMS_API_BASE || '').replace(/\/+$/, '');
-  const ENDPOINT = (API_BASE || '') + '/.netlify/functions/contact';
+  const ENDPOINT = '/.netlify/functions/contact';
 
   function validate(field) {
     const err = field.parentElement.querySelector('.error'); let msg = '';

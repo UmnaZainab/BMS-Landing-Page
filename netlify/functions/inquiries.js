@@ -9,7 +9,10 @@ function getClient() {
   if (!clientPromise) {
     clientPromise = new MongoClient(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 8000,
-    }).connect();
+    }).connect().catch(error => {
+      clientPromise = null;
+      throw error;
+    });
   }
   return clientPromise;
 }
@@ -27,7 +30,7 @@ exports.handler = async (event) => {
 
   try {
     const client = await getClient();
-    const db     = client.db(process.env.MONGODB_DB || 'nexbms');
+    const db     = client.db('nexbms');
     const docs   = await db.collection('inquiries')
       .find({})
       .sort({ created_at: -1 })

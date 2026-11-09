@@ -10,7 +10,7 @@ const COOKIE_NAME = 'NEXBMS_ADMIN';
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24; // 24 hours
 
 function hmacSecret() {
-  const pw = process.env.ADMIN_PASSWORD || '';
+  const pw = stripQuotesWhitespace(process.env.ADMIN_PASSWORD);
   return crypto.createHash('sha256').update(pw + '|NEXBMS-SESSION-V1').digest();
 }
 
@@ -23,13 +23,16 @@ function sign(user) {
 
 function verify(token) {
   if (!token || typeof token !== 'string') return null;
+  const configuredUser = stripQuotesWhitespace(process.env.ADMIN_USER);
+  if (!configuredUser || !stripQuotesWhitespace(process.env.ADMIN_PASSWORD)) return null;
   let decoded;
   try { decoded = Buffer.from(token, 'base64url').toString('utf8'); } catch { return null; }
   const parts = decoded.split(':');
   if (parts.length !== 3) return null;
   const [exp, user, hmac] = parts;
-  const expNum = parseInt(exp, 10);
-  if (!Number.isFinite(expNum) || expNum < Math.floor(Date.now() / 1000)) return null;
+  const expNum = Number(exp);
+  if (!Number.isSafeInteger(expNum) || expNum < Math.floor(Date.now() / 1000)) return null;
+  if (!safeEqual(user, configuredUser)) return null;
   const expected = crypto.createHmac('sha256', hmacSecret()).update(`${exp}:${user}`).digest('hex');
   try {
     if (!crypto.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expected, 'hex'))) return null;
