@@ -26,7 +26,7 @@
 
   // On a valid submit, send the visitor to Calendly in a new tab with their
   // email prefilled. Invalid submits still get inline validation feedback.
-  const CALENDLY_URL = 'https://calendly.com/umnazainab07/30min';
+  const CALENDLY_URL = 'https://calendly.com/nexumglobalsolutions';
   $('#demoForm').addEventListener('submit', e => {
     e.preventDefault();
     const status = $('#formStatus');

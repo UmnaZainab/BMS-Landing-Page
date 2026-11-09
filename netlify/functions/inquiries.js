@@ -1,21 +1,9 @@
 /* GET /.netlify/functions/inquiries
  * Returns all inquiries from MongoDB, newest first. Requires an authenticated session.
  */
-const { MongoClient } = require('mongodb');
 const { json, getSession } = require('../lib/auth');
-
-let clientPromise = null;
-function getClient() {
-  if (!clientPromise) {
-    clientPromise = new MongoClient(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 8000,
-    }).connect().catch(error => {
-      clientPromise = null;
-      throw error;
-    });
-  }
-  return clientPromise;
-}
+const { getDb } = require('../lib/db');
+const { getAuthenticatedUser } = require('../lib/users');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') {
@@ -29,8 +17,10 @@ exports.handler = async (event) => {
   }
 
   try {
-    const client = await getClient();
-    const db     = client.db('nexbms');
+    const db = await getDb();
+    if (!await getAuthenticatedUser(event, db)) {
+      return json(401, { ok: false, detail: 'Authentication required.' });
+    }
     const docs   = await db.collection('inquiries')
       .find({})
       .sort({ created_at: -1 })

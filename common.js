@@ -173,7 +173,7 @@
 
   // Book a Demo → Calendly scheduler modal (lazy-loads the Calendly embed assets
   // on first open, then initializes the inline widget via the Calendly API).
-  const CALENDLY_URL = 'https://calendly.com/umnazainab07/30min';
+  const CALENDLY_URL = 'https://calendly.com/nexumglobalsolutions';
   let cal = null, calWidget = null, calReady = false, calInited = false, lastFocus = null;
   function ensureCalendlyAssets() {
     if (calReady) return;

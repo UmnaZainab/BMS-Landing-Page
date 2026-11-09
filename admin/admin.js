@@ -5,6 +5,7 @@
  *   POST /.netlify/functions/login      -> { ok, authenticated }
  *   POST /.netlify/functions/logout     -> { ok }
  *   GET  /.netlify/functions/inquiries  -> { ok, items: [...] }
+ *   POST /.netlify/functions/user-management -> account updates
  */
 (function () {
   'use strict';
@@ -13,6 +14,7 @@
     login:     '/.netlify/functions/login',
     logout:    '/.netlify/functions/logout',
     inquiries: '/.netlify/functions/inquiries',
+    users:     '/.netlify/functions/user-management',
   };
   const HOME = '../index.html';
 
@@ -84,9 +86,12 @@
           </div>
           <div class="admin-actions">
             <button class="btn btn-ghost sm" id="refreshBtn" type="button">Refresh</button>
+            <button class="btn btn-ghost sm" id="changePasswordBtn" type="button">Change Password</button>
+            <button class="btn btn-ghost sm" id="addUserBtn" type="button">Add New User</button>
             <button class="btn btn-ghost sm" id="logoutBtn" type="button">Logout</button>
           </div>
         </div>
+        <div class="admin-notice" id="dashboardStatus" role="status" aria-live="polite"></div>
         <div class="table-card">
           <div class="table-meta" id="tableMeta"><span class="spinner"></span>Loading&hellip;</div>
           <div class="table-scroll">
@@ -99,12 +104,108 @@
           </div>
           <div class="empty" id="emptyState" hidden>No inquiries yet.</div>
         </div>
+        <dialog class="admin-dialog" id="passwordDialog" aria-labelledby="passwordDialogTitle">
+          <form id="passwordForm">
+            <h2 id="passwordDialogTitle">Change Password</h2>
+            <div class="field"><label for="currentPassword">Current Password</label><input id="currentPassword" type="password" autocomplete="current-password" required></div>
+            <div class="field"><label for="newPassword">New Password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="12" required></div>
+            <div class="field"><label for="confirmPassword">Confirm New Password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="12" required></div>
+            <div class="form-status" id="passwordStatus" role="alert"></div>
+            <div class="dialog-actions"><button class="btn btn-ghost" type="button" data-close-dialog>Cancel</button><button class="btn btn-primary" type="submit">Save Password</button></div>
+          </form>
+        </dialog>
+        <dialog class="admin-dialog" id="userDialog" aria-labelledby="userDialogTitle">
+          <form id="userForm">
+            <h2 id="userDialogTitle">Add New User</h2>
+            <div class="field"><label for="newUsername">New Username</label><input id="newUsername" autocomplete="off" minlength="3" maxlength="64" pattern="[A-Za-z0-9_.-]+" required></div>
+            <div class="field"><label for="userPassword">Password</label><input id="userPassword" type="password" autocomplete="new-password" minlength="12" required></div>
+            <div class="form-status" id="userStatus" role="alert"></div>
+            <div class="dialog-actions"><button class="btn btn-ghost" type="button" data-close-dialog>Cancel</button><button class="btn btn-primary" type="submit">Add User</button></div>
+          </form>
+        </dialog>
       </div>`;
     const r = $('refreshBtn');
     const l = $('logoutBtn');
     if (r) r.addEventListener('click', loadInquiries);
     if (l) l.addEventListener('click', onLogout);
+    $('changePasswordBtn').addEventListener('click', () => openDialog('passwordDialog'));
+    $('addUserBtn').addEventListener('click', () => openDialog('userDialog'));
+    $('passwordForm').addEventListener('submit', changePassword);
+    $('userForm').addEventListener('submit', addUser);
+    appEl.querySelectorAll('[data-close-dialog]').forEach(button => {
+      button.addEventListener('click', () => button.closest('dialog').close());
+    });
     loadInquiries();
+  }
+
+  function openDialog(id) {
+    const dialog = $(id);
+    if (!dialog) return;
+    dialog.querySelector('form').reset();
+    const status = dialog.querySelector('.form-status');
+    status.textContent = '';
+    status.dataset.kind = '';
+    dialog.showModal();
+  }
+
+  function dashboardStatus(kind, message) {
+    const status = $('dashboardStatus');
+    if (!status) return;
+    status.dataset.kind = kind;
+    status.textContent = message;
+  }
+
+  async function submitUserAction(form, payload, statusId, successMessage) {
+    const button = form.querySelector('button[type="submit"]');
+    const status = $(statusId);
+    if (button.disabled) return;
+    button.disabled = true;
+    status.textContent = '';
+    status.dataset.kind = '';
+    try {
+      const response = await fetch(API.users, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) { renderLogin('Session expired. Please sign in again.'); return; }
+      if (!response.ok || !result.ok) throw new Error(result.detail || `Request failed (${response.status})`);
+      form.reset();
+      form.closest('dialog').close();
+      dashboardStatus('ok', successMessage);
+    } catch (error) {
+      status.dataset.kind = 'err';
+      status.textContent = error.message || 'Request failed. Please try again.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function changePassword(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const current = $('currentPassword').value;
+    const next = $('newPassword').value;
+    const confirm = $('confirmPassword').value;
+    if (next !== confirm) {
+      const status = $('passwordStatus');
+      status.dataset.kind = 'err';
+      status.textContent = 'New passwords do not match.';
+      return;
+    }
+    submitUserAction(form, {
+      action: 'change-password', current_password: current, new_password: next,
+    }, 'passwordStatus', 'Password changed successfully.');
+  }
+
+  function addUser(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    submitUserAction(form, {
+      action: 'add-user', username: $('newUsername').value.trim(), password: $('userPassword').value,
+    }, 'userStatus', 'User added successfully.');
   }
 
   async function checkAuth() {

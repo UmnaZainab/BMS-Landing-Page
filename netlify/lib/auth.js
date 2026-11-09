@@ -1,43 +1,38 @@
-/* Shared auth + response helpers for Netlify Functions.
- *
- * Serverless functions cannot keep PHP-style sessions, so the admin flow uses
- * an HMAC-signed session cookie. Rotating ADMIN_PASSWORD invalidates all
- * existing cookies (intended).
- */
+/* Shared signed-cookie and response helpers for Netlify Functions. */
 const crypto = require('crypto');
 
 const COOKIE_NAME = 'NEXBMS_ADMIN';
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24; // 24 hours
 
 function hmacSecret() {
-  const pw = stripQuotesWhitespace(process.env.ADMIN_PASSWORD);
-  return crypto.createHash('sha256').update(pw + '|NEXBMS-SESSION-V1').digest();
+  const secret = stripQuotesWhitespace(process.env.ADMIN_SESSION_SECRET) ||
+    stripQuotesWhitespace(process.env.ADMIN_PASSWORD);
+  if (!secret) return null;
+  return crypto.createHash('sha256').update(secret + '|NEXBMS-SESSION-V2').digest();
 }
 
-function sign(user) {
+function sign(user, version) {
+  const key = hmacSecret();
+  if (!key) throw new Error('Session signing secret is not configured');
   const exp = Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE_SECONDS;
-  const payload = `${exp}:${user}`;
-  const hmac = crypto.createHmac('sha256', hmacSecret()).update(payload).digest('hex');
-  return Buffer.from(`${payload}:${hmac}`, 'utf8').toString('base64url');
+  const payload = Buffer.from(JSON.stringify({ user, version, exp })).toString('base64url');
+  const hmac = crypto.createHmac('sha256', key).update(payload).digest('base64url');
+  return `${payload}.${hmac}`;
 }
 
 function verify(token) {
-  if (!token || typeof token !== 'string') return null;
-  const configuredUser = stripQuotesWhitespace(process.env.ADMIN_USER);
-  if (!configuredUser || !stripQuotesWhitespace(process.env.ADMIN_PASSWORD)) return null;
-  let decoded;
-  try { decoded = Buffer.from(token, 'base64url').toString('utf8'); } catch { return null; }
-  const parts = decoded.split(':');
-  if (parts.length !== 3) return null;
-  const [exp, user, hmac] = parts;
-  const expNum = Number(exp);
-  if (!Number.isSafeInteger(expNum) || expNum < Math.floor(Date.now() / 1000)) return null;
-  if (!safeEqual(user, configuredUser)) return null;
-  const expected = crypto.createHmac('sha256', hmacSecret()).update(`${exp}:${user}`).digest('hex');
+  const key = hmacSecret();
+  if (!key || typeof token !== 'string' || token.length > 2048) return null;
+  const parts = token.split('.');
+  if (parts.length !== 2) return null;
+  const expected = crypto.createHmac('sha256', key).update(parts[0]).digest('base64url');
+  if (!safeEqual(expected, parts[1])) return null;
   try {
-    if (!crypto.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expected, 'hex'))) return null;
+    const session = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf8'));
+    if (typeof session.user !== 'string' || typeof session.version !== 'string' ||
+        !Number.isSafeInteger(session.exp) || session.exp <= Math.floor(Date.now() / 1000)) return null;
+    return session;
   } catch { return null; }
-  return { user, exp: expNum };
 }
 
 function parseCookies(header) {

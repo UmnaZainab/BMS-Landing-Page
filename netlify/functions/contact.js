@@ -2,21 +2,8 @@
  * Inserts a contact form submission into the MongoDB "inquiries" collection.
  * Body: { full_name, email, phone, subject, message }
  */
-const { MongoClient } = require('mongodb');
 const { json } = require('../lib/auth');
-
-let clientPromise = null;
-function getClient() {
-  if (!clientPromise) {
-    clientPromise = new MongoClient(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 8000,
-    }).connect().catch(error => {
-      clientPromise = null;
-      throw error;
-    });
-  }
-  return clientPromise;
-}
+const { getDb } = require('../lib/db');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -63,8 +50,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const client = await getClient();
-    const db     = client.db('nexbms');
+    const db = await getDb();
     const result = await db.collection('inquiries').insertOne({
       full_name:  fullName,
       email,

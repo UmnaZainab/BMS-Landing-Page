@@ -1,6 +1,7 @@
 /* POST /.netlify/functions/login  body: { user, pass }  -> sets session cookie
  * GET  /.netlify/functions/login                        -> { ok, authenticated }
- * Credentials compared against ADMIN_USER / ADMIN_PASSWORD env vars.
+ * Credentials are checked against MongoDB users. The first login bootstraps
+ * an empty users collection from ADMIN_USER / ADMIN_PASSWORD.
  */
 const {
   json,
@@ -8,15 +9,27 @@ const {
   getSession,
   setCookieHeader,
   stripQuotesWhitespace,
-  safeEqual,
 } = require('../lib/auth');
+const { getDb } = require('../lib/db');
+const {
+  bootstrapAdmin,
+  getAuthenticatedUser,
+  normalizeUsername,
+  verifyPassword,
+} = require('../lib/users');
 
 exports.handler = async (event) => {
   const method = event.httpMethod;
 
   if (method === 'GET') {
-    const sess = getSession(event);
-    return json(200, { ok: true, authenticated: !!sess });
+    if (!getSession(event)) return json(200, { ok: true, authenticated: false });
+    try {
+      const db = await getDb();
+      return json(200, { ok: true, authenticated: !!await getAuthenticatedUser(event, db) });
+    } catch (error) {
+      console.error('[login] session check failed:', error);
+      return json(500, { ok: false, detail: 'Could not check authentication.' });
+    }
   }
   if (method !== 'POST') {
     return json(405, { ok: false, detail: 'Method not allowed.' });
@@ -29,23 +42,21 @@ exports.handler = async (event) => {
     return json(400, { ok: false, detail: 'Invalid JSON payload.' });
   }
 
-  const user = stripQuotesWhitespace(data.user);
-  const pass = stripQuotesWhitespace(data.pass);
-
-  const expectedUser = stripQuotesWhitespace(process.env.ADMIN_USER || '');
-  const expectedPass = stripQuotesWhitespace(process.env.ADMIN_PASSWORD || '');
-
-  if (!expectedUser || !expectedPass) {
-    return json(500, { ok: false, detail: 'Admin credentials not configured.' });
+  const user = normalizeUsername(stripQuotesWhitespace(data.user));
+  const pass = typeof data.pass === 'string' ? data.pass : '';
+  if (!user || !pass) return json(401, { ok: false, detail: 'Invalid credentials.' });
+  try {
+    const db = await getDb();
+    await bootstrapAdmin(db);
+    const record = await db.collection('users').findOne({ username: user });
+    if (!record || !verifyPassword(pass, record.password_hash)) {
+      return json(401, { ok: false, detail: 'Invalid credentials.' });
+    }
+    return json(200, { ok: true, authenticated: true }, {
+      'Set-Cookie': setCookieHeader(sign(record.username, record.session_version)),
+    });
+  } catch (error) {
+    console.error('[login] authentication failed:', error);
+    return json(500, { ok: false, detail: 'Could not sign in. Please try again.' });
   }
-
-  if (!safeEqual(expectedUser, user) || !safeEqual(expectedPass, pass)) {
-    return json(401, { ok: false, detail: 'Invalid credentials.' });
-  }
-
-  return json(
-    200,
-    { ok: true, authenticated: true },
-    { 'Set-Cookie': setCookieHeader(sign(user)) }
-  );
 };
