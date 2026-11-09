@@ -128,6 +128,18 @@
     const l = $('logoutBtn');
     if (r) r.addEventListener('click', loadInquiries);
     if (l) l.addEventListener('click', onLogout);
+    $('inqBody').addEventListener('click', event => {
+      const button = event.target.closest('.message-toggle');
+      if (!button) return;
+      const cell = button.closest('.cell-msg');
+      const preview = cell.querySelector('.message-preview');
+      const full = cell.querySelector('.message-full');
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      preview.hidden = !expanded;
+      full.hidden = expanded;
+      button.setAttribute('aria-expanded', String(!expanded));
+      button.textContent = expanded ? 'View more' : 'Show less';
+    });
     $('changePasswordBtn').addEventListener('click', () => openDialog('passwordDialog'));
     $('addUserBtn').addEventListener('click', () => openDialog('userDialog'));
     $('passwordForm').addEventListener('submit', changePassword);
@@ -299,15 +311,25 @@
       return;
     }
     meta.textContent = `${items.length} inquir${items.length === 1 ? 'y' : 'ies'} · newest first`;
-    tbody.innerHTML = items.map(it => `
+    tbody.innerHTML = items.map(it => {
+      const message = String(it.message || '');
+      const characters = Array.from(message);
+      const isLong = characters.length > 60;
+      const preview = isLong ? `${characters.slice(0, 60).join('')}...` : message;
+      return `
       <tr>
         <td class="cell-date">${escapeHtml(formatDate(it.created_at))}</td>
         <td>${escapeHtml(it.full_name)}</td>
         <td class="cell-email">${it.email ? `<a href="mailto:${escapeAttr(it.email)}">${escapeHtml(it.email)}</a>` : ''}</td>
         <td class="cell-phone">${it.phone ? `<a href="tel:${escapeAttr(it.phone)}">${escapeHtml(it.phone)}</a>` : ''}</td>
         <td>${escapeHtml(it.subject)}</td>
-        <td class="cell-msg">${escapeHtml(it.message)}</td>
-      </tr>`).join('');
+        <td class="cell-msg">
+          <div class="message-text message-preview">${escapeHtml(preview)}</div>
+          ${isLong ? `<div class="message-text message-full" hidden>${escapeHtml(message)}</div>
+          <button class="message-toggle" type="button" aria-expanded="false">View more</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
     table.hidden = false;
   }
 
