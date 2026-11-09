@@ -1,12 +1,19 @@
 /* Admin dashboard: login card + inquiries table.
- * Depends on same-origin PHP endpoints:
- *   GET  api/login.php      -> { ok, authenticated }
- *   POST api/login.php      -> { ok, authenticated }
- *   POST api/logout.php     -> { ok }
- *   GET  api/inquiries.php  -> { ok, items: [...] }
+ * Served from /admin/ — API paths are relative to the parent directory.
+ * Endpoints (same-origin):
+ *   GET  ../api/login.php      -> { ok, authenticated }
+ *   POST ../api/login.php      -> { ok, authenticated }
+ *   POST ../api/logout.php     -> { ok }
+ *   GET  ../api/inquiries.php  -> { ok, items: [...] }
  */
 (function () {
   const app = document.getElementById('app');
+  const API = {
+    login:     '../api/login.php',
+    logout:    '../api/logout.php',
+    inquiries: '../api/inquiries.php',
+  };
+  const HOME = '../index.html';
 
   function escapeHtml(s) {
     return String(s ?? '').replace(/[&<>"']/g, m => ({
@@ -30,7 +37,7 @@
     app.innerHTML = `
       <section class="login-shell">
         <form class="login-card" id="loginForm" novalidate>
-          <a class="brand" href="index.html"><span class="dot"></span>NExBMS</a>
+          <a class="brand" href="${HOME}"><span class="dot"></span>NExBMS</a>
           <h1>Admin sign in</h1>
           <p class="sub">Access the inquiries dashboard.</p>
           <div class="field">
@@ -53,7 +60,7 @@
       <div class="admin-wrap">
         <div class="admin-head">
           <div>
-            <a class="brand" href="index.html" style="margin-bottom:8px"><span class="dot"></span>NExBMS</a>
+            <a class="brand" href="${HOME}" style="margin-bottom:8px"><span class="dot"></span>NExBMS</a>
             <h1>Inquiries</h1>
             <div class="sub">Messages submitted via the Contact Us form.</div>
           </div>
@@ -82,7 +89,7 @@
 
   async function checkAuth() {
     try {
-      const r = await fetch('api/login.php', { credentials: 'same-origin' });
+      const r = await fetch(API.login, { credentials: 'same-origin' });
       const j = await r.json();
       return !!j.authenticated;
     } catch { return false; }
@@ -105,7 +112,7 @@
     status.dataset.kind = '';
     status.textContent = '';
     try {
-      const r = await fetch('api/login.php', {
+      const r = await fetch(API.login, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         credentials: 'same-origin',
@@ -124,7 +131,7 @@
 
   async function onLogout() {
     try {
-      await fetch('api/logout.php', { method: 'POST', credentials: 'same-origin' });
+      await fetch(API.logout, { method: 'POST', credentials: 'same-origin' });
     } catch { /* ignore */ }
     renderLogin();
   }
@@ -139,7 +146,7 @@
     empty.hidden = true;
 
     try {
-      const r = await fetch('api/inquiries.php', { credentials: 'same-origin' });
+      const r = await fetch(API.inquiries, { credentials: 'same-origin' });
       if (r.status === 401) { renderLogin('Session expired. Please sign in again.'); return; }
       const j = await r.json().catch(() => ({}));
       if (!r.ok || !j.ok) throw new Error(j.detail || `Failed to load (${r.status})`);
