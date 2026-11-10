@@ -14,7 +14,7 @@ $uri = $_ENV['MONGODB_URI'] ?? '';
 if ($uri === '') {
     respond(500, ['ok' => false, 'detail' => 'Server misconfigured: MONGODB_URI missing.']);
 }
-$dbName = $_ENV['MONGODB_DB'] ?? 'nexbms';
+$dbName = $_ENV['MONGODB_DB'] ?? 'nexum_bms';
 
 try {
     $client     = new Client($uri);

@@ -7,15 +7,6 @@ use Dotenv\Dotenv;
 
 Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
 
-// Docker Compose env_file / phpdotenv sometimes leave surrounding quotes or
-// trailing whitespace on values. Strip them for keys that are compared
-// character-exactly against user input.
-foreach (['ADMIN_USER', 'ADMIN_PASSWORD'] as $k) {
-    if (isset($_ENV[$k])) {
-        $_ENV[$k] = trim($_ENV[$k], "\"' \t\n\r");
-    }
-}
-
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
@@ -42,11 +33,29 @@ function require_login(): void {
     if (empty($_SESSION['admin'])) {
         respond(401, ['ok' => false, 'detail' => 'Authentication required.']);
     }
+    try {
+        $user = admin_collection()->findOne(['username' => $_SESSION['admin']['user'] ?? '']);
+        if (!$user || ($user['status'] ?? '') !== 'active' ||
+            !in_array((string) ($user['role'] ?? ''), ['admin', 'super_admin'], true) ||
+            !hash_equals((string) ($user['session_version'] ?? ''), (string) ($_SESSION['admin']['version'] ?? ''))) {
+            respond(401, ['ok' => false, 'detail' => 'Authentication required.']);
+        }
+    } catch (Throwable $e) {
+        error_log('[auth.php] ' . $e->getMessage());
+        respond(500, ['ok' => false, 'detail' => 'Could not check authentication.']);
+    }
 }
 
-function login_user(string $user): void {
+function admin_collection(): MongoDB\Collection {
+    $uri = $_ENV['MONGODB_URI'] ?? '';
+    if ($uri === '') respond(500, ['ok' => false, 'detail' => 'Database connection is not configured.']);
+    $client = new MongoDB\Client($uri);
+    return $client->selectDatabase($_ENV['MONGODB_DB'] ?? 'nexum_bms')->selectCollection('admin_users');
+}
+
+function login_user(string $user, string $version): void {
     session_regenerate_id(true);
-    $_SESSION['admin'] = ['user' => $user, 'at' => time()];
+    $_SESSION['admin'] = ['user' => $user, 'version' => $version, 'at' => time()];
 }
 
 function logout_user(): void {

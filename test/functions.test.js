@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const Module = require('node:module');
+const crypto = require('node:crypto');
 
 const users = [];
 const inquiriesData = [];
@@ -12,7 +13,7 @@ function matches(doc, filter) {
 }
 
 const collections = {
-  users: {
+  admin_users: {
     async findOne(filter) { return users.find(user => matches(user, filter)) || null; },
     async createIndex(keys, options) {
       assert.deepEqual(keys, { username: 1 });
@@ -74,7 +75,7 @@ const contact = require('../netlify/functions/contact').handler;
 const login = require('../netlify/functions/login').handler;
 const inquiries = require('../netlify/functions/inquiries').handler;
 const manage = require('../netlify/functions/user-management').handler;
-const { verifyPassword } = require('../netlify/lib/users');
+const { verifyPassword, hashPassword } = require('../netlify/lib/users');
 Module._load = originalLoad;
 
 function post(handler, body, cookie) {
@@ -96,18 +97,20 @@ test('contact uses the configured database and writes UTC dates', async () => {
   assert.ok(inquiriesData[0].created_at instanceof Date);
 });
 
-test('first login bootstraps a hashed admin and rejects bad credentials', async () => {
+const adminName = `test${crypto.randomBytes(4).toString('hex')}`;
+const adminPass = crypto.randomBytes(18).toString('base64url');
+
+test('login checks the existing admin_users record and rejects bad credentials', async () => {
   delete process.env.MONGODB_DB;
-  process.env.ADMIN_USER = ' "Admin" ';
-  process.env.ADMIN_PASSWORD = ' "initial-secret" ';
-  const bad = await post(login, { user: 'admin', pass: 'wrong' });
+  users.push({ _id: '1', username: adminName, password_hash: hashPassword(adminPass),
+    session_version: crypto.randomUUID(), role: 'super_admin', status: 'active' });
+  const bad = await post(login, { user: adminName, pass: 'wrong' });
   assert.equal(bad.statusCode, 401);
   assert.equal(users.length, 1);
-  assert.equal(users[0].username, 'admin');
-  assert.notEqual(users[0].password_hash, 'initial-secret');
-  assert.equal(verifyPassword('initial-secret', users[0].password_hash), true);
+  assert.equal(users[0].username, adminName);
+  assert.equal(verifyPassword(adminPass, users[0].password_hash), true);
 
-  const good = await post(login, { user: 'ADMIN', pass: 'initial-secret' });
+  const good = await post(login, { user: adminName.toUpperCase(), pass: adminPass });
   assert.equal(good.statusCode, 200);
   assert.equal(databaseName, 'nexum_bms');
   assert.match(good.headers['Set-Cookie'], /HttpOnly.*Secure/);
@@ -115,7 +118,7 @@ test('first login bootstraps a hashed admin and rejects bad credentials', async 
 
 test('add user and change password invalidate the previous session', async () => {
   process.env.MONGODB_URI = 'mongodb://mock';
-  const adminLogin = await post(login, { user: 'admin', pass: 'initial-secret' });
+  const adminLogin = await post(login, { user: adminName, pass: adminPass });
   const adminCookie = adminLogin.headers['Set-Cookie'];
   const noAuth = await post(manage, { action: 'add-user', username: 'alice', password: 'a-long-password' });
   assert.equal(noAuth.statusCode, 401);

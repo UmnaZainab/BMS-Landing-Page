@@ -4,7 +4,9 @@ require __DIR__ . '/_auth.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    respond(200, ['ok' => true, 'authenticated' => !empty($_SESSION['admin'])]);
+    if (empty($_SESSION['admin'])) respond(200, ['ok' => true, 'authenticated' => false]);
+    require_login();
+    respond(200, ['ok' => true, 'authenticated' => true]);
 }
 
 if ($method !== 'POST') {
@@ -17,21 +19,18 @@ if (!is_array($data)) {
     respond(400, ['ok' => false, 'detail' => 'Invalid JSON payload.']);
 }
 
-$user = is_string($data['user'] ?? null) ? trim($data['user'], "\"' \t\n\r") : '';
-$pass = is_string($data['pass'] ?? null) ? trim($data['pass'], "\"' \t\n\r") : '';
-
-$expectedUser = $_ENV['ADMIN_USER']     ?? '';
-$expectedPass = $_ENV['ADMIN_PASSWORD'] ?? '';
-
-if ($expectedUser === '' || $expectedPass === '') {
-    respond(500, ['ok' => false, 'detail' => 'Admin credentials not configured.']);
+$username = is_string($data['user'] ?? null) ? strtolower(trim($data['user'])) : '';
+$password = is_string($data['pass'] ?? null) ? $data['pass'] : '';
+try {
+    $user = admin_collection()->findOne(['username' => $username]);
+    if (!$user || ($user['status'] ?? '') !== 'active' ||
+        !in_array((string) ($user['role'] ?? ''), ['admin', 'super_admin'], true) ||
+        !password_verify($password, (string) ($user['password_hash'] ?? ''))) {
+        respond(401, ['ok' => false, 'detail' => 'Invalid credentials.']);
+    }
+    login_user($username, (string) $user['session_version']);
+} catch (Throwable $e) {
+    error_log('[login.php] ' . $e->getMessage());
+    respond(500, ['ok' => false, 'detail' => 'Could not sign in.']);
 }
-
-$userOk = hash_equals($expectedUser, $user);
-$passOk = hash_equals($expectedPass, $pass);
-if (!$userOk || !$passOk) {
-    respond(401, ['ok' => false, 'detail' => 'Invalid credentials.']);
-}
-
-login_user($user);
 respond(200, ['ok' => true, 'authenticated' => true]);

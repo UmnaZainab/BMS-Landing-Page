@@ -1,7 +1,6 @@
 /* POST /.netlify/functions/login  body: { user, pass }  -> sets session cookie
  * GET  /.netlify/functions/login                        -> { ok, authenticated }
- * Credentials are checked against MongoDB users. The first login bootstraps
- * an empty users collection from ADMIN_USER / ADMIN_PASSWORD.
+ * Credentials are checked against MongoDB admin_users.
  */
 const {
   json,
@@ -12,7 +11,6 @@ const {
 } = require('../lib/auth');
 const { getDb } = require('../lib/db');
 const {
-  bootstrapAdmin,
   getAuthenticatedUser,
   normalizeUsername,
   verifyPassword,
@@ -47,9 +45,9 @@ exports.handler = async (event) => {
   if (!user || !pass) return json(401, { ok: false, detail: 'Invalid credentials.' });
   try {
     const db = await getDb();
-    await bootstrapAdmin(db);
-    const record = await db.collection('users').findOne({ username: user });
-    if (!record || !verifyPassword(pass, record.password_hash)) {
+    const record = await db.collection('admin_users').findOne({ username: user });
+    if (!record || record.status !== 'active' ||
+        !['admin', 'super_admin'].includes(record.role) || !verifyPassword(pass, record.password_hash)) {
       return json(401, { ok: false, detail: 'Invalid credentials.' });
     }
     return json(200, { ok: true, authenticated: true }, {

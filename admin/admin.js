@@ -10,11 +10,17 @@
 (function () {
   'use strict';
 
-  const API = {
+  let API = {
     login:     '/.netlify/functions/login',
     logout:    '/.netlify/functions/logout',
     inquiries: '/.netlify/functions/inquiries',
     users:     '/.netlify/functions/user-management',
+  };
+  const PHP_API = {
+    login: '/api/login.php',
+    logout: '/api/logout.php',
+    inquiries: '/api/inquiries.php',
+    users: '/api/user-management.php',
   };
   const HOME = '../index.html';
 
@@ -222,7 +228,11 @@
 
   async function checkAuth() {
     try {
-      const r = await fetch(API.login, { credentials: 'same-origin' });
+      let r = await fetch(API.login, { credentials: 'same-origin' });
+      if (r.status === 404) {
+        API = PHP_API;
+        r = await fetch(API.login, { credentials: 'same-origin' });
+      }
       if (!r.ok) return false;
       const j = await r.json().catch(() => ({}));
       return !!j.authenticated;

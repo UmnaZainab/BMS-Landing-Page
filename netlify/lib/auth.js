@@ -6,7 +6,7 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24; // 24 hours
 
 function hmacSecret() {
   const secret = stripQuotesWhitespace(process.env.ADMIN_SESSION_SECRET) ||
-    stripQuotesWhitespace(process.env.ADMIN_PASSWORD);
+    stripQuotesWhitespace(process.env.MONGODB_URI);
   if (!secret) return null;
   return crypto.createHash('sha256').update(secret + '|NEXBMS-SESSION-V2').digest();
 }

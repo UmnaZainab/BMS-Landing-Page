@@ -2,6 +2,7 @@
 (function () {
   const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
   const ENDPOINT = '/.netlify/functions/contact';
+  const PHP_ENDPOINT = '/api/contact.php';
 
   function validate(field) {
     const err = field.parentElement.querySelector('.error'); let msg = '';
@@ -47,11 +48,13 @@
     showStatus('info', 'Sending your message…');
 
     try {
-      const res = await fetch(ENDPOINT, {
+      const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload),
-      });
+      };
+      let res = await fetch(ENDPOINT, options);
+      if (res.status === 404) res = await fetch(PHP_ENDPOINT, options);
       if (!res.ok) {
         let detail = '';
         try { detail = (await res.json()).detail || ''; } catch { /* non-JSON */ }

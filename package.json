@@ -7,9 +7,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "dev": "node dev-server.js",
+    "setup:super-admin": "node scripts/create-super-admin.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "mongodb": "^6.5.0"
   }
 }

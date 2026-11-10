@@ -32,14 +32,14 @@ exports.handler = async (event) => {
     const db = await getDb();
     const currentUser = await getAuthenticatedUser(event, db);
     if (!currentUser) return json(401, { ok: false, detail: 'Authentication required.' });
-    const users = db.collection('users');
+    const users = db.collection('admin_users');
 
     if (data.action === 'change-password') {
       if (!verifyPassword(data.current_password, currentUser.password_hash)) {
         return json(403, { ok: false, detail: 'Current password is incorrect.' });
       }
       if (!validPassword(data.new_password)) {
-        return json(400, { ok: false, detail: 'New password must be 12 to 1024 characters.' });
+        return json(400, { ok: false, detail: 'New password must be 12 to 72 bytes.' });
       }
       if (data.current_password === data.new_password) {
         return json(400, { ok: false, detail: 'Choose a different password.' });
@@ -69,7 +69,7 @@ exports.handler = async (event) => {
       return json(400, { ok: false, detail: 'Username must be 3 to 64 letters, numbers, dots, dashes, or underscores.' });
     }
     if (!validPassword(data.password)) {
-      return json(400, { ok: false, detail: 'Password must be 12 to 1024 characters.' });
+      return json(400, { ok: false, detail: 'Password must be 12 to 72 bytes.' });
     }
     await users.createIndex({ username: 1 }, { unique: true });
     if (await users.findOne({ username })) {
@@ -79,6 +79,8 @@ exports.handler = async (event) => {
       username,
       password_hash: hashPassword(data.password),
       session_version: crypto.randomUUID(),
+      role: 'admin',
+      status: 'active',
       created_at: new Date(),
       created_by: currentUser.username,
     });
