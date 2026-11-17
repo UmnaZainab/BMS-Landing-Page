@@ -1,9 +1,9 @@
-/* Shared across every page: injects the header + footer so navigation and
-   branding stay consistent, then wires theme, mobile menu, nav auto-hide,
-   scroll reveals and count-up animations. */
+/* Injected across every page: builds the sticky glass header + dark navy footer
+   for the single-page NExBMS site, then wires theme, mobile menu, smooth scroll,
+   active-section highlighting, scroll reveals, count-up numbers, back-to-top,
+   floating quick actions and the Calendly booking modal. */
 (function () {
   const page = document.body.dataset.page || 'home';
-  const on = k => (k === page ? ' class="on"' : '');
   const logoMark = `<span class="logo" aria-hidden="true">
     <svg viewBox="0 0 40 40" focusable="false">
       <path class="logo-n" d="M8.5 28V12l11 16V12" />
@@ -14,54 +14,48 @@
     </svg>
   </span>`;
 
-  document.getElementById('site-header').innerHTML = `
+  const header = document.getElementById('site-header');
+  if (header) header.innerHTML = `
     <nav class="nav container" aria-label="Primary navigation">
-      <a class="brand" href="index.html">${logoMark}<span><b>NExBMS</b><small>BUSINESS MANAGEMENT SYSTEM</small></span></a>
+      <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>Nexum Global Solutions</small></span></a>
       <div class="links" id="navLinks">
-        <a href="index.html"${on('home')}>Home</a>
-        <a href="index.html#about">About Us</a>
-        <a href="index.html#features">Features</a>
-        <a href="pricing.html"${on('pricing')}>Pricing</a>
-        <a href="index.html#blog">Blog</a>
-        <a href="contact.html"${on('contact')}>Contact Us</a>
-        <a href="demo.html"${on('demo')}>Book a Demo</a>
-        <div class="header-social" aria-label="Nexum Global Solutions social media">
-          <a href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://www.youtube.com/@NexumGlobalSolutions" target="_blank" rel="noopener noreferrer">YouTube</a>
-        </div>
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#about" data-nav="about">About</a>
+        <a href="#features" data-nav="features">Features</a>
+        <a href="#process" data-nav="process">Process</a>
+        <a href="#pricing" data-nav="pricing">Pricing</a>
+        <a href="#demo" data-nav="demo">Demo</a>
+        <a href="#contact" data-nav="contact">Contact</a>
       </div>
       <div class="nav-actions">
-        <button class="theme" id="theme" aria-label="Switch to dark mode" title="Change theme">◐</button>
-        <a class="btn btn-dark" href="pricing.html">Get Pricing</a>
-        <a class="btn btn-primary" href="demo.html" data-calendly>Book a Demo</a>
+        <button class="theme" id="theme" aria-label="Switch to light mode" title="Change theme">☀</button>
+        <a class="btn btn-ghost nav-cta-hide" href="#pricing">Get Pricing</a>
+        <a class="btn btn-primary" href="#demo">Book a Demo</a>
         <button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button>
       </div>
     </nav>`;
 
-  document.getElementById('site-footer').innerHTML = `
+  const footer = document.getElementById('site-footer');
+  if (footer) footer.innerHTML = `
     <div class="container">
       <div class="foot-card">
         <div class="foot-grid">
           <div class="foot-brand">
-            <a class="brand" href="index.html">${logoMark}<span><b>NExBMS</b><small>BUSINESS MANAGEMENT SYSTEM</small></span></a>
-            <p>Unified people, operations and delivery management for growing teams.</p>
-            <div class="foot-credit">
-              <span class="powered-by">Powered by <a href="https://nexumglobal.solutions/" target="_blank" rel="noopener noreferrer"><strong>Nexum Global Solutions</strong></a></span>
-            </div>
+            <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>Nexum Global Solutions</small></span></a>
+            <p>Unified people, operations and delivery management for growing teams — built by Nexum Global Solutions.</p>
+            <span class="powered-by">Powered by <a href="https://nexumglobal.solutions/" target="_blank" rel="noopener noreferrer"><strong>Nexum Global Solutions</strong></a></span>
           </div>
           <div class="foot-col">
-            <h4>Useful Links</h4>
-            <a href="index.html">Home</a>
-            <a href="index.html#features">Features</a>
-            <a href="index.html#about">About Us</a>
-            <a href="pricing.html">Pricing</a>
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="#process">Process</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#demo">Book a Demo</a>
           </div>
           <div class="foot-col">
-            <h4>Quick Links</h4>
-            <a href="demo.html">Book a Demo</a>
-            <a href="contact.html">Contact Us</a>
+            <h4>Company</h4>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms of Service</a>
           </div>
@@ -74,10 +68,12 @@
           <div class="foot-social">
             <h4>Let's Connect</h4>
             <div class="foot-social-links">
-              <a class="soc" href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.4 2.63 4.4 6.05V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V21H9z"/></svg></span>LinkedIn</a>
-              <a class="soc" href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.9 3.77-3.9 1.1 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></span>Facebook</a>
-              <a class="soc" href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></span>Instagram</a>
-              <a class="soc" href="https://www.youtube.com/@NexumGlobalSolutions" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.4-.44-5.04a3 3 0 0 0-2.12-2.12C18.86 4.4 12 4.4 12 4.4s-6.86 0-8.44.44a3 3 0 0 0-2.12 2.12C1 8.6 1 12 1 12s0 3.4.44 5.04a3 3 0 0 0 2.12 2.12c1.58.44 8.44.44 8.44.44s6.86 0 8.44-.44a3 3 0 0 0 2.12-2.12C23 15.4 23 12 23 12Zm-13.2 3.2V8.8l5.7 3.2-5.7 3.2Z"/></svg></span>YouTube</a>
+              <a class="soc" data-net="email" href="mailto:info@nexumglobal.solutions" aria-label="Email"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>Email</a>
+              <a class="soc" data-net="whatsapp" href="https://wa.me/923278223333" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg></span>WhatsApp</a>
+              <a class="soc" data-net="linkedin" href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.4 2.63 4.4 6.05V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V21H9z"/></svg></span>LinkedIn</a>
+              <a class="soc" data-net="facebook" href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.9 3.77-3.9 1.1 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></span>Facebook</a>
+              <a class="soc" data-net="instagram" href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></span>Instagram</a>
+              <a class="soc" data-net="youtube" href="https://www.youtube.com/@NexumGlobalSolutions" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.4-.44-5.04a3 3 0 0 0-2.12-2.12C18.86 4.4 12 4.4 12 4.4s-6.86 0-8.44.44a3 3 0 0 0-2.12 2.12C1 8.6 1 12 1 12s0 3.4.44 5.04a3 3 0 0 0 2.12 2.12c1.58.44 8.44.44 8.44.44s6.86 0 8.44-.44a3 3 0 0 0 2.12-2.12C23 15.4 23 12 23 12Zm-13.2 3.2V8.8l5.7 3.2-5.7 3.2Z"/></svg></span>YouTube</a>
             </div>
           </div>
         </div>
@@ -91,44 +87,113 @@
       </div>
     </div>`;
 
-  const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
 
-  // Mobile menu
-  const menu = $('#menu'), navLinks = $('#navLinks');
-  if (menu) menu.addEventListener('click', () => { const open = navLinks.classList.toggle('open'); menu.setAttribute('aria-expanded', open); menu.textContent = open ? '×' : '☰'; });
-  $$('.links a').forEach(a => a.addEventListener('click', () => { navLinks.classList.remove('open'); if (menu) { menu.setAttribute('aria-expanded', 'false'); menu.textContent = '☰'; } }));
+  /* ---------- Mobile menu drawer ---------- */
+  const menu = $('#menu');
+  const navLinks = $('#navLinks');
+  if (menu && navLinks) {
+    menu.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menu.setAttribute('aria-expanded', open);
+      menu.textContent = open ? '×' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+      menu.textContent = '☰';
+    }));
+  }
 
-  // Theme (persisted), with a smooth cross-fade on switch
-  const saved = localStorage.getItem('nexum-standalone-theme'); if (saved) document.documentElement.dataset.theme = saved;
-  function themeLabel() { const dark = document.documentElement.dataset.theme === 'dark'; const t = $('#theme'); if (!t) return; t.textContent = dark ? '☀' : '◐'; t.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`); const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#080d18' : '#f6f8fc'; }
+  /* ---------- Theme toggle (dark default, persisted) ---------- */
+  const THEME_KEY = 'nexum-standalone-theme';
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved) document.documentElement.dataset.theme = saved;
+  function themeLabel() {
+    const dark = document.documentElement.dataset.theme !== 'light';
+    const t = $('#theme');
+    if (!t) return;
+    t.textContent = dark ? '◐' : '☀';
+    t.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
+    const m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.content = dark ? '#06111E' : '#F4F7FB';
+  }
   themeLabel();
-  const theme = $('#theme'); if (theme) theme.addEventListener('click', () => { const d = document.documentElement; if (!matchMedia('(prefers-reduced-motion:reduce)').matches) { d.classList.add('theming'); clearTimeout(d._th); d._th = setTimeout(() => d.classList.remove('theming'), 450); } d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('nexum-standalone-theme', d.dataset.theme); themeLabel(); });
-
-  // Scroll reveals (runs after any page script has injected its .reveal content)
-  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
-  const motionCards = document.documentElement.classList.contains('motion-page') && window.Motion;
-  $$('.reveal').forEach(e => {
-    if (motionCards && e.matches('.feature, .impact-card')) return;
-    obs.observe(e);
+  const theme = $('#theme');
+  if (theme) theme.addEventListener('click', () => {
+    const d = document.documentElement;
+    const next = d.dataset.theme === 'light' ? 'dark' : 'light';
+    d.dataset.theme = next;
+    localStorage.setItem(THEME_KEY, next);
+    themeLabel();
   });
 
-  // Count-up numbers (ease-out cubic); reduced motion jumps to the final value
+  /* ---------- Smooth scroll for in-page anchors ---------- */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href');
+    if (id.length <= 1) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    history.replaceState(null, '', id);
+  });
+
+  /* ---------- Reveal observer ---------- */
+  const revealObs = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  }), { threshold: .12, rootMargin: '0px 0px -40px' });
+  $$('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ---------- Active section highlight on scroll ---------- */
+  const sections = ['home', 'about', 'features', 'process', 'pricing', 'demo', 'contact']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const navAnchors = new Map(Array.from($$('[data-nav]')).map(a => [a.dataset.nav, a]));
+  const setActive = id => {
+    navAnchors.forEach((a, key) => a.classList.toggle('active', key === id));
+  };
+  if (sections.length && navAnchors.size) {
+    const spy = new IntersectionObserver(entries => {
+      entries.filter(e => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        .forEach(e => setActive(e.target.id));
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+    sections.forEach(s => spy.observe(s));
+    setActive(sections[0].id);
+  }
+
+  /* ---------- Count-up numbers ---------- */
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const countIO = ('IntersectionObserver' in window) && !reduce ? new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; countIO.unobserve(e.target); const el = e.target, end = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0); let t0 = null; const dur = 1800; (function tick(t) { if (t0 === null) t0 = t; const pr = Math.min((t - t0) / dur, 1), v = 1 - Math.pow(1 - pr, 3); el.textContent = (end * v).toFixed(dec); if (pr < 1) requestAnimationFrame(tick); else el.textContent = end.toFixed(dec); })(performance.now()); }), { threshold: .6 }) : null;
-  $$('[data-to]').forEach(el => { countIO ? countIO.observe(el) : el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)); });
+  const countIO = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    countIO.unobserve(e.target);
+    const el = e.target, end = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0);
+    let t0 = null; const dur = 1800;
+    (function tick(t) {
+      if (t0 === null) t0 = t;
+      const pr = Math.min((t - t0) / dur, 1), v = 1 - Math.pow(1 - pr, 3);
+      el.textContent = (end * v).toFixed(dec);
+      if (pr < 1) requestAnimationFrame(tick); else el.textContent = end.toFixed(dec);
+    })(performance.now());
+  }), { threshold: .6 }) : null;
+  $$('[data-to]').forEach(el => countIO ? countIO.observe(el) : el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)));
 
-  // Auto-hide nav on scroll down, reveal on scroll up
-  const nav = $('.nav'); let lastY = window.scrollY;
-  window.addEventListener('scroll', () => { const y = window.scrollY; if (nav) nav.classList.toggle('hide', y > lastY && y > 260 && !$('#navLinks.open')); lastY = y; }, { passive: true });
+  /* ---------- Auto-hide nav on scroll ---------- */
+  const nav = $('.nav');
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (nav) nav.classList.toggle('hide', y > lastY && y > 260 && !$('#navLinks.open'));
+    lastY = y;
+  }, { passive: true });
 
-  // Hero flip word (home): swap a single inline span's text every 2.5s with a
-  // fade + vertical slide. Width is locked to the widest word so the centered
-  // headline never reflows and only one word is ever shown.
+  /* ---------- Hero flip word ---------- */
   const flip = document.getElementById('flipWord');
   if (flip) {
-    const words = ['company', 'business'];
-    const reduceFlip = matchMedia('(prefers-reduced-motion:reduce)').matches;
-    // Measure both words in the real inherited font and reserve the widest.
+    const words = ['company', 'business', 'workforce'];
     const sizer = document.createElement('span');
     sizer.setAttribute('aria-hidden', 'true');
     sizer.style.cssText = 'position:absolute;left:-9999px;top:0;white-space:nowrap;font:inherit;letter-spacing:inherit';
@@ -140,49 +205,91 @@
     let fi = 0;
     setInterval(() => {
       fi = (fi + 1) % words.length;
-      if (reduceFlip) { flip.textContent = words[fi]; return; }
+      if (reduce) { flip.textContent = words[fi]; return; }
       flip.classList.add('flip-out');
       setTimeout(() => {
         flip.textContent = words[fi];
         flip.classList.remove('flip-out');
-        flip.classList.add('flip-in');            // start new word slightly below, hidden
+        flip.classList.add('flip-in');
         requestAnimationFrame(() => requestAnimationFrame(() => flip.classList.remove('flip-in')));
       }, 360);
     }, 2500);
   }
 
-  // Infinite logo marquee (home): duplicate the track once for a seamless loop.
-  const logoTrack = document.getElementById('logoTrack');
-  if (logoTrack) {
-    const clone = logoTrack.innerHTML;
-    logoTrack.insertAdjacentHTML('beforeend', clone);
-    [...logoTrack.children].slice(logoTrack.children.length / 2).forEach(el => el.setAttribute('aria-hidden', 'true'));
-  }
+  /* ---------- Hero sidebar walkthrough ---------- */
+  try {
+    const dash = document.querySelector('.hero-card');
+    const demoItems = dash ? [...dash.querySelectorAll('.side-item')] : [];
+    if (dash && demoItems.length > 1 && !reduce) {
+      const bars = [...dash.querySelectorAll('.hd-chart i')];
+      let di = Math.max(0, demoItems.findIndex(i => i.classList.contains('active')));
+      const replayBars = () => bars.forEach(b => { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; });
+      const step = () => {
+        demoItems[di].classList.remove('active');
+        di = (di + 1) % demoItems.length;
+        demoItems[di].classList.add('active');
+        replayBars();
+      };
+      let demoTimer = setInterval(step, 2200);
+      document.addEventListener('visibilitychange', () => {
+        clearInterval(demoTimer);
+        if (!document.hidden) demoTimer = setInterval(step, 2200);
+      });
+    }
+  } catch (e) { /* non-critical */ }
 
-  // Back-to-top: a floating button that fades in on scroll and returns to the hero.
-  const toTop = document.createElement('button');
-  toTop.id = 'toTop';
-  toTop.type = 'button';
-  toTop.setAttribute('aria-label', 'Back to top');
-  toTop.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
-  document.body.appendChild(toTop);
-  const toTopReduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: toTopReduce ? 'auto' : 'smooth' }));
+  /* ---------- Floating actions (back-to-top, quick chat, quick demo) ---------- */
+  const fab = document.createElement('div');
+  fab.className = 'fab-stack';
+  fab.innerHTML = `
+    <button class="fab whatsapp" type="button" aria-label="Chat on WhatsApp" title="Chat on WhatsApp" onclick="window.open('https://wa.me/923278223333','_blank','noopener')">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg>
+    </button>
+    <button class="fab chat" type="button" data-calendly aria-label="Quick demo" title="Book a quick demo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/></svg>
+    </button>
+    <button class="fab" type="button" id="toTop" aria-label="Back to top" title="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+    </button>`;
+  document.body.appendChild(fab);
+  const toTop = fab.querySelector('#toTop');
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
   const toTopUpd = () => toTop.classList.toggle('show', window.scrollY > 600);
   toTopUpd(); window.addEventListener('scroll', toTopUpd, { passive: true });
 
-  // Book a Demo → Calendly scheduler modal (lazy-loads the Calendly embed assets
-  // on first open, then initializes the inline widget via the Calendly API).
-  const CALENDLY_URL = 'https://calendly.com/nexumglobalsolutions';
+  /* ---------- Scroll progress bar ---------- */
+  if (!reduce) {
+    document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-prog"><i></i></div>');
+    const bar = document.querySelector('.scroll-prog i');
+    const upd = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+    };
+    upd();
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd, { passive: true });
+  }
+
+  /* ---------- Calendly booking modal (lazy-loaded) ---------- */
+  const CALENDLY_URL = 'https://calendly.com/nexumglobal-solutions/nexum-ems-demo';
   let cal = null, calWidget = null, calReady = false, calInited = false, lastFocus = null;
   function ensureCalendlyAssets() {
     if (calReady) return;
     if (!document.querySelector('link[href*="calendly.com/assets"]')) {
-      const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://assets.calendly.com/assets/external/widget.css'; document.head.appendChild(l);
+      const l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = 'https://assets.calendly.com/assets/external/widget.css';
+      document.head.appendChild(l);
     }
     if (window.Calendly) { calReady = true; initCalWidget(); return; }
     let s = document.querySelector('script[src*="calendly.com/assets"]');
-    if (!s) { s = document.createElement('script'); s.src = 'https://assets.calendly.com/assets/external/widget.js'; s.async = true; document.head.appendChild(s); }
+    if (!s) {
+      s = document.createElement('script');
+      s.src = 'https://assets.calendly.com/assets/external/widget.js';
+      s.async = true;
+      document.head.appendChild(s);
+    }
     s.addEventListener('load', () => { calReady = true; initCalWidget(); });
   }
   function initCalWidget() {
@@ -194,7 +301,11 @@
   function buildCal() {
     cal = document.createElement('div');
     cal.className = 'cal-modal';
-    cal.innerHTML = `<div class="cal-backdrop" data-cal-close></div><div class="cal-dialog" role="dialog" aria-modal="true" aria-label="Book a demo"><button class="cal-close" type="button" aria-label="Close scheduler" data-cal-close>×</button><div class="cal-widget" style="min-width:320px;height:640px"><div class="cal-loading">Loading scheduler…</div></div></div>`;
+    cal.innerHTML = `<div class="cal-backdrop" data-cal-close></div>
+      <div class="cal-dialog" role="dialog" aria-modal="true" aria-label="Book a demo">
+        <button class="cal-close" type="button" aria-label="Close scheduler" data-cal-close>×</button>
+        <div class="cal-widget"><div class="cal-loading">Loading scheduler…</div></div>
+      </div>`;
     document.body.appendChild(cal);
     calWidget = cal.querySelector('.cal-widget');
     cal.addEventListener('click', e => { if (e.target.hasAttribute('data-cal-close')) closeCal(); });
@@ -218,51 +329,10 @@
     const trigger = e.target.closest('[data-calendly]');
     if (trigger) { e.preventDefault(); openCal(); }
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && cal && cal.classList.contains('open')) closeCal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && cal && cal.classList.contains('open')) closeCal();
+  });
 
-  // Hero dashboard preview (home): an auto-playing walkthrough that advances the
-  // sidebar highlight (Overview → Leave Requests → Recruitment → …) on a loop and
-  // replays the chart bars on each step for a "live product" feel. Wrapped in
-  // try/catch and guarded so it no-ops off the home page and never halts the rest
-  // of this file; pauses while the tab is hidden and self-heals on return.
-  try {
-    const dash = document.querySelector('.dash');
-    const demoItems = dash ? [...dash.querySelectorAll('.side-item')] : [];
-    const demoReduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-    if (dash && demoItems.length > 1 && !demoReduce) {
-      const bars = [...dash.querySelectorAll('.hd-chart i, .chart i')];
-      let di = Math.max(0, demoItems.findIndex(i => i.classList.contains('active')));
-      const replayBars = () => bars.forEach(b => { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; });
-      const step = () => {
-        demoItems[di].classList.remove('active');
-        di = (di + 1) % demoItems.length;
-        demoItems[di].classList.add('active');
-        replayBars();
-      };
-      let demoTimer = setInterval(step, 2200);
-      document.addEventListener('visibilitychange', () => {
-        clearInterval(demoTimer);
-        if (!document.hidden) demoTimer = setInterval(step, 2200);
-      });
-    }
-  } catch (e) { /* preview walkthrough is non-critical */ }
-
-  // System-architecture tree (home): hovering a module lights its branch.
-  const arch = document.querySelector('.arch-stage');
-  if (arch) {
-    const brs = [...arch.querySelectorAll('.br')];
-    arch.querySelectorAll('.arch-node').forEach(n => {
-      const i = n.dataset.br, set = v => { n.classList.toggle('lit', v); brs.forEach(b => { if (b.dataset.br === i) b.classList.toggle('lit', v); }); };
-      n.addEventListener('mouseenter', () => set(true));
-      n.addEventListener('mouseleave', () => set(false));
-    });
-  }
-
-  // Scroll progress bar at the top of the viewport.
-  if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
-    document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-prog"><i></i></div>');
-    const bar = document.querySelector('.scroll-prog i');
-    const upd = () => { const h = document.documentElement, max = h.scrollHeight - h.clientHeight; bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`; };
-    upd(); window.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd, { passive: true });
-  }
+  /* Expose Calendly URL for scripts that may want it (demo.js). */
+  window.__NEXUM_CALENDLY_URL = CALENDLY_URL;
 })();

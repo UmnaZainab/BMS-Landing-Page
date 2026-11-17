@@ -45,6 +45,21 @@
   $('#cartCheckout').addEventListener('click', () => {
     const names = modules.filter(m => selected.has(m.name)).map(m => m.name);
     try { localStorage.setItem('nexum-cart', JSON.stringify(names)); } catch (e) {}
-    location.href = 'demo.html';
+    const demoSection = document.getElementById('demo');
+    if (demoSection) {
+      const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+      demoSection.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', '#demo');
+      // Re-run demo.js cart-preview wiring: the IIFE already consumed localStorage on
+      // page load, so manually surface the selection in the pre-form notice.
+      const sel = document.getElementById('demoSel');
+      if (sel && names.length) {
+        sel.textContent = `Selected for your walkthrough: ${names.join(', ')}`;
+        sel.hidden = false;
+        try { localStorage.removeItem('nexum-cart'); } catch (e) {}
+      }
+    } else {
+      location.href = 'index.html#demo';
+    }
   });
 })();
