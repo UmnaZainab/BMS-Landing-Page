@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="NExBMS">
   <meta property="og:url" content="https://nexbms.com/">
-  <link rel="stylesheet" href="./style.css?v=4">
+  <link rel="stylesheet" href="./style.css?v=5">
 </head>
 <body data-page="home">
 
@@ -28,7 +28,7 @@
           <h1>One <span class="gradient-text">connected platform</span><br>for your entire <span class="flip" id="flipWord">company</span>.</h1>
           <p>NExBMS unifies HR, Attendance, Recruitment, Payroll, Projects and company operations in a single secure, role-aware workspace built by Nexum Global Solutions.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#demo" data-calendly>Book a Demo <span>→</span></a>
+            <a class="btn btn-primary" href="#" data-open-demo>Book a Demo <span>→</span></a>
             <a class="btn btn-ghost" href="#features">Explore Features</a>
           </div>
           <div class="trust">
@@ -146,7 +146,7 @@
           <h2>Built around the way a <span class="highlight">real company</span> operates.</h2>
           <p>NExBMS is a centralized Business Management System by <strong style="color:#fff">Nexum Global Solutions</strong>. It unifies HR, Attendance, Recruitment, Payroll and Project operations in a single role-aware workspace — so every department moves forward on the same data.</p>
           <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:10px">
-            <a class="btn btn-primary" href="#demo">Book a Demo <span>→</span></a>
+            <a class="btn btn-primary" href="#" data-open-demo>Book a Demo <span>→</span></a>
             <a class="btn btn-ghost" href="#features">See Features</a>
           </div>
         </div>
@@ -281,44 +281,6 @@
 
 
     <!-- =========================================================
-         DEMO  (demo.js reads #demoForm — scoped IDs to avoid clash)
-         ========================================================= -->
-    <section class="section demo" id="demo">
-      <div class="container">
-        <div class="section-head center reveal">
-          <span class="kicker">Book a Demo</span>
-          <h2>See NExBMS <span class="highlight">in action.</span></h2>
-          <p>A focused 15-minute live walkthrough tailored to how your team actually works — no pressure, no sales theatre.</p>
-        </div>
-
-        <div class="demo-grid">
-          <div class="demo-copy reveal left">
-            <ul class="demo-points">
-              <li><b>15-minute live walkthrough</b><span>A guided tour of the modules that matter most to your departments.</span></li>
-              <li><b>Custom setup discussion</b><span>Roles, departments and workflows mapped to your organization's structure.</span></li>
-              <li><b>Q&amp;A with a product specialist</b><span>Ask anything — pricing, security, onboarding and rollout timelines.</span></li>
-            </ul>
-          </div>
-
-          <form class="form reveal right" id="demoForm" novalidate>
-            <h3 class="form-title">Schedule your walkthrough</h3>
-            <div class="form-status" id="demoStatus" role="status"></div>
-            <div class="demo-sel" id="demoSel" hidden></div>
-            <div class="form-grid">
-              <div class="field full"><label for="demoEmail">Work Email</label><input id="demoEmail" name="email" type="email" required autocomplete="email" placeholder="you@company.com"><span class="error"></span></div>
-              <div class="field full"><label for="demoCompany">Company Name</label><input id="demoCompany" name="company" required minlength="2" autocomplete="organization" placeholder="Your company"><span class="error"></span></div>
-              <div class="field"><label for="demoTeam">Team Size</label><select id="demoTeam" name="team"><option>1–10</option><option>11–50</option><option>51–200</option><option>201–500</option><option>500+</option></select><span class="error"></span></div>
-              <div class="field"><label for="demoDate">Preferred Date</label><input id="demoDate" name="date" type="date" required><span class="error"></span></div>
-              <div class="field full"><label for="demoSlot">Time Slot</label><select id="demoSlot" name="slot"><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>01:00 PM</option><option>02:00 PM</option><option>03:00 PM</option><option>04:00 PM</option></select><span class="error"></span></div>
-            </div>
-            <button class="btn btn-primary" type="submit" style="width:100%">Schedule My Demo <span>→</span></button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- =========================================================
          CONTACT  (contact.js reads #contactForm with these IDs)
          ========================================================= -->
     <section class="section contact" id="contact">
@@ -382,11 +344,54 @@
 
   </main>
 
+  <!-- =========================================================
+       DEMO MODAL (opened by any [data-open-demo] trigger)
+       demo.js owns #demoForm submit + the Calendly handoff.
+       ========================================================= -->
+  <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" aria-hidden="true">
+    <div class="demo-modal-backdrop" data-demo-close></div>
+    <div class="demo-modal-dialog">
+      <button class="demo-modal-close" type="button" aria-label="Close demo booking" data-demo-close>×</button>
+
+      <div class="demo-modal-step" data-step="form">
+        <div class="demo-modal-head">
+          <span class="kicker">Book a Demo</span>
+          <h3 id="demoModalTitle">Schedule your walkthrough</h3>
+          <p>A focused 15-minute live walkthrough tailored to how your team actually works.</p>
+        </div>
+        <form class="form" id="demoForm" novalidate>
+          <div class="form-status" id="demoStatus" role="status"></div>
+          <div class="demo-sel" id="demoSel" hidden></div>
+          <div class="form-grid">
+            <div class="field full"><label for="demoEmail">Work Email</label><input id="demoEmail" name="email" type="email" required autocomplete="email" placeholder="you@company.com"><span class="error"></span></div>
+            <div class="field full"><label for="demoCompany">Company Name</label><input id="demoCompany" name="company" required minlength="2" autocomplete="organization" placeholder="Your company"><span class="error"></span></div>
+            <div class="field"><label for="demoTeam">Team Size</label><select id="demoTeam" name="team"><option>1–10</option><option>11–50</option><option>51–200</option><option>201–500</option><option>500+</option></select><span class="error"></span></div>
+            <div class="field"><label for="demoDate">Preferred Date</label><input id="demoDate" name="date" type="date" required><span class="error"></span></div>
+            <div class="field full"><label for="demoSlot">Time Slot</label><select id="demoSlot" name="slot"><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>01:00 PM</option><option>02:00 PM</option><option>03:00 PM</option><option>04:00 PM</option></select><span class="error"></span></div>
+          </div>
+          <button class="btn btn-primary" type="submit" id="demoSubmit" style="width:100%">Schedule Walkthrough <span>→</span></button>
+        </form>
+      </div>
+
+      <div class="demo-modal-step" data-step="calendly" hidden>
+        <div class="demo-modal-head">
+          <span class="kicker">Pick Your Slot</span>
+          <h3>Walkthrough details saved!</h3>
+          <p id="demoCalendlyMsg">Opening Calendly so you can pick your exact slot…</p>
+        </div>
+        <div class="demo-calendly-wrap" id="demoCalendlyWrap">
+          <div class="demo-calendly-loading">Loading Calendly scheduler…</div>
+        </div>
+        <a class="btn btn-ghost demo-calendly-open" id="demoCalendlyOpen" href="https://calendly.com/nexumglobal-solutions" target="_blank" rel="noopener noreferrer">Open Calendly in a new tab <span>→</span></a>
+      </div>
+    </div>
+  </div>
+
   <footer id="site-footer"></footer>
 
   <script src="./pricing.js?v=200" defer></script>
   <script src="./contact.js?v=200" defer></script>
-  <script src="./demo.js?v=200" defer></script>
-  <script src="./common.js?v=4" defer></script>
+  <script src="./demo.js?v=5" defer></script>
+  <script src="./common.js?v=5" defer></script>
 </body>
 </html>

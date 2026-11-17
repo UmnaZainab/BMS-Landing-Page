@@ -408,21 +408,72 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .cart-checkout span{transition:transform .25s var(--ease)}
 .cart-checkout:hover span{transform:translateX(4px)}
 
-/* ---------- Demo section ---------- */
-.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.demo-copy ul.demo-points{list-style:none;padding:0;margin:26px 0;display:flex;flex-direction:column;gap:14px}
-.demo-points li{
-  position:relative;padding:14px 16px 14px 56px;border-radius:14px;
-  background:rgba(255,255,255,.03);border:1px solid var(--line-2);
+/* ---------- Demo booking modal ---------- */
+.demo-modal{
+  position:fixed;inset:0;z-index:2000;
+  display:none;align-items:center;justify-content:center;padding:20px;
 }
-.demo-points li::before{
-  content:"";position:absolute;left:14px;top:14px;width:30px;height:30px;border-radius:10px;
-  background:linear-gradient(135deg,rgba(204,0,0,.28),rgba(142,12,27,.4));
-  border:1px solid rgba(255,100,120,.25);
+.demo-modal.open{display:flex;animation:demoModalFade .25s var(--ease) both}
+.demo-modal-backdrop{position:absolute;inset:0;background:rgba(2,6,12,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.demo-modal-dialog{
+  position:relative;z-index:1;width:min(560px,100%);max-height:92vh;overflow:auto;
+  padding:32px;border-radius:22px;
+  background:linear-gradient(160deg,#0E1C2D,#06111E);
+  border:1px solid var(--line-2);
+  box-shadow:0 40px 100px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04) inset;
+  color:var(--ink);
+  animation:demoModalRise .35s var(--ease) both;
 }
-.demo-points li::after{content:"→";position:absolute;left:22px;top:17px;color:var(--primary-2);font-weight:800}
-.demo-points b{display:block;color:#fff;font-size:14px;margin-bottom:3px}
-.demo-points span{color:var(--muted);font-size:13px;line-height:1.5}
+.demo-modal-dialog::-webkit-scrollbar{width:10px}
+.demo-modal-dialog::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:10px}
+.demo-modal-close{
+  position:absolute;top:14px;right:14px;z-index:2;
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);
+  background:rgba(0,0,0,.4);color:#fff;font-size:22px;line-height:1;cursor:pointer;
+  transition:background .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease);
+}
+.demo-modal-close:hover{background:var(--primary);border-color:var(--primary);transform:scale(1.05)}
+.demo-modal-head{margin-bottom:22px}
+.demo-modal-head .kicker{margin-bottom:12px}
+.demo-modal-head h3{margin:0 0 8px;font-size:clamp(24px,3vw,30px);font-weight:800;letter-spacing:-.02em;color:#fff}
+.demo-modal-head p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.demo-modal-step .form{
+  padding:0;background:transparent;border:0;box-shadow:none;
+}
+.demo-calendly-wrap{
+  position:relative;margin-top:8px;border-radius:14px;overflow:hidden;
+  background:rgba(255,255,255,.04);border:1px solid var(--line-2);
+  min-height:480px;
+}
+.demo-calendly-wrap iframe{display:block;width:100%;height:560px;border:0;background:transparent}
+.demo-calendly-loading{display:grid;place-items:center;min-height:480px;color:var(--muted);font-size:13px}
+.demo-calendly-open{display:inline-flex;margin-top:14px;justify-content:center;width:100%}
+@keyframes demoModalFade{from{opacity:0}to{opacity:1}}
+@keyframes demoModalRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+
+/* Light-mode demo modal — crisp white card */
+[data-theme="light"] .demo-modal-dialog{
+  background:#fff;
+  border-color:#CBD5E1;
+  box-shadow:0 40px 100px rgba(11,22,38,.25),0 0 0 1px rgba(11,22,38,.04) inset;
+  color:#0B1526;
+}
+[data-theme="light"] .demo-modal-backdrop{background:rgba(11,22,38,.55)}
+[data-theme="light"] .demo-modal-head h3{color:#0B1526}
+[data-theme="light"] .demo-modal-head p{color:#334155}
+[data-theme="light"] .demo-modal-close{background:#F8FAFC;border-color:#CBD5E1;color:#0B1526}
+[data-theme="light"] .demo-modal-close:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+[data-theme="light"] .demo-calendly-wrap{background:#F8FAFC;border-color:#CBD5E1}
+[data-theme="light"] .demo-calendly-loading{color:#64748B}
+[data-theme="light"] .demo-modal-dialog::-webkit-scrollbar-thumb{background:rgba(11,22,38,.14)}
+
+@media(max-width:620px){
+  .demo-modal{padding:12px}
+  .demo-modal-dialog{padding:26px 20px;border-radius:18px}
+  .demo-calendly-wrap{min-height:420px}
+  .demo-calendly-wrap iframe{height:500px}
+}
+
 /* ---------- Form shared ---------- */
 .form{
   padding:32px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
@@ -521,17 +572,6 @@ footer{position:relative;margin-top:60px;background:var(--bg-2);border-top:1px s
 .fab svg{width:22px;height:22px}
 #toTop{opacity:0;pointer-events:none;transform:translateY(10px)}
 #toTop.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-
-/* ---------- Calendly modal ---------- */
-.cal-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
-.cal-modal.open{display:flex;animation:fadeIn .25s var(--ease) both}
-.cal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
-.cal-dialog{position:relative;width:min(960px,100%);max-height:88vh;border-radius:20px;overflow:hidden;background:#0E1C2D;border:1px solid var(--line-2);box-shadow:0 40px 100px rgba(0,0,0,.6)}
-.cal-close{position:absolute;top:10px;right:12px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:22px;cursor:pointer}
-.cal-close:hover{background:var(--primary)}
-.cal-widget{width:100%;height:640px;max-height:80vh}
-.cal-loading{display:grid;place-items:center;height:100%;color:var(--muted);font-size:13px}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 /* ---------- Count-up numbers ---------- */
 [data-to]{font-variant-numeric:tabular-nums}
@@ -676,10 +716,7 @@ footer{position:relative;margin-top:60px;background:var(--bg-2);border-top:1px s
 [data-theme="light"] .cart-info span:last-child{color:#0B1526}
 [data-theme="light"] .pricing-note{color:#92400E;background:color-mix(in srgb,#F59E0B 20%,transparent);border-color:color-mix(in srgb,#F59E0B 48%,transparent)}
 
-/* Demo */
-[data-theme="light"] .demo-points li{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.05)}
-[data-theme="light"] .demo-points b{color:#0B1526}
-[data-theme="light"] .demo-points span{color:#334155}
+/* Demo modal selected-plan pill */
 [data-theme="light"] .demo-sel{color:#8E0C1B;background:color-mix(in srgb,var(--primary) 8%,transparent);border-color:color-mix(in srgb,var(--primary) 32%,transparent)}
 
 /* Contact */

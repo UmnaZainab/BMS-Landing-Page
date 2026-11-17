@@ -24,13 +24,12 @@
         <a href="#features" data-nav="features">Features</a>
         <a href="#process" data-nav="process">Process</a>
         <a href="#pricing" data-nav="pricing">Pricing</a>
-        <a href="#demo" data-nav="demo">Demo</a>
         <a href="#contact" data-nav="contact">Contact</a>
       </div>
       <div class="nav-actions">
         <button class="theme" id="theme" aria-label="Switch to light mode" title="Change theme">☀</button>
         <a class="btn btn-ghost nav-cta-hide" href="#pricing">Get Pricing</a>
-        <a class="btn btn-primary" href="#demo" data-calendly>Book a Demo</a>
+        <a class="btn btn-primary" href="#" data-open-demo>Book a Demo</a>
         <button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button>
       </div>
     </nav>`;
@@ -50,7 +49,7 @@
             <a href="#features">Features</a>
             <a href="#process">Process</a>
             <a href="#pricing">Pricing</a>
-            <a href="#demo">Book a Demo</a>
+            <a href="#" data-open-demo>Book a Demo</a>
           </div>
           <div class="foot-col">
             <h4>Company</h4>
@@ -133,8 +132,8 @@
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    // Calendly-trigger links are handled by their own listener below.
-    if (a.closest('[data-calendly]')) return;
+    // Demo-modal triggers are handled by their own listener below.
+    if (a.closest('[data-open-demo]')) return;
     const id = a.getAttribute('href');
     if (id.length <= 1) return;
     const target = document.querySelector(id);
@@ -152,7 +151,7 @@
   $$('.reveal').forEach(el => revealObs.observe(el));
 
   /* ---------- Active section highlight on scroll ---------- */
-  const sections = ['home', 'about', 'features', 'process', 'pricing', 'demo', 'contact']
+  const sections = ['home', 'about', 'features', 'process', 'pricing', 'contact']
     .map(id => document.getElementById(id)).filter(Boolean);
   const navAnchors = new Map(Array.from($$('[data-nav]')).map(a => [a.dataset.nav, a]));
   const setActive = id => {
@@ -258,68 +257,51 @@
     window.addEventListener('resize', upd, { passive: true });
   }
 
-  /* ---------- Calendly booking modal (lazy-loaded) ---------- */
-  const CALENDLY_URL = 'https://calendly.com/nexumglobal-solutions/nexum-ems-demo';
-  let cal = null, calWidget = null, calReady = false, calInited = false, lastFocus = null;
-  function ensureCalendlyAssets() {
-    if (calReady) return;
-    if (!document.querySelector('link[href*="calendly.com/assets"]')) {
-      const l = document.createElement('link');
-      l.rel = 'stylesheet';
-      l.href = 'https://assets.calendly.com/assets/external/widget.css';
-      document.head.appendChild(l);
-    }
-    if (window.Calendly) { calReady = true; initCalWidget(); return; }
-    let s = document.querySelector('script[src*="calendly.com/assets"]');
-    if (!s) {
-      s = document.createElement('script');
-      s.src = 'https://assets.calendly.com/assets/external/widget.js';
-      s.async = true;
-      document.head.appendChild(s);
-    }
-    s.addEventListener('load', () => { calReady = true; initCalWidget(); });
-  }
-  function initCalWidget() {
-    if (calInited || !window.Calendly || !calWidget) return;
-    calInited = true;
-    calWidget.innerHTML = '';
-    window.Calendly.initInlineWidget({ url: CALENDLY_URL, parentElement: calWidget });
-  }
-  function buildCal() {
-    cal = document.createElement('div');
-    cal.className = 'cal-modal';
-    cal.innerHTML = `<div class="cal-backdrop" data-cal-close></div>
-      <div class="cal-dialog" role="dialog" aria-modal="true" aria-label="Book a demo">
-        <button class="cal-close" type="button" aria-label="Close scheduler" data-cal-close>×</button>
-        <div class="cal-widget"><div class="cal-loading">Loading scheduler…</div></div>
-      </div>`;
-    document.body.appendChild(cal);
-    calWidget = cal.querySelector('.cal-widget');
-    cal.addEventListener('click', e => { if (e.target.hasAttribute('data-cal-close')) closeCal(); });
-  }
-  function openCal() {
-    if (!cal) buildCal();
-    ensureCalendlyAssets();
-    initCalWidget();
-    lastFocus = document.activeElement;
-    cal.classList.add('open');
+  /* ---------- Demo booking modal controller ---------- */
+  const CALENDLY_URL = 'https://calendly.com/nexumglobal-solutions';
+  window.__NEXUM_CALENDLY_URL = CALENDLY_URL;
+
+  const demoModal = document.getElementById('demoModal');
+  let demoLastFocus = null;
+  function openDemoModal() {
+    if (!demoModal) { window.open(CALENDLY_URL, '_blank', 'noopener'); return; }
+    demoLastFocus = document.activeElement;
+    demoModal.classList.add('open');
+    demoModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    const btn = cal.querySelector('.cal-close'); if (btn) btn.focus();
+    // Reset to form view whenever the modal is reopened.
+    const steps = demoModal.querySelectorAll('.demo-modal-step');
+    steps.forEach(s => s.hidden = s.dataset.step !== 'form');
+    const firstField = demoModal.querySelector('input,select,textarea,button');
+    if (firstField) firstField.focus();
   }
-  function closeCal() {
-    if (!cal) return;
-    cal.classList.remove('open');
+  function closeDemoModal() {
+    if (!demoModal) return;
+    demoModal.classList.remove('open');
+    demoModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    if (demoLastFocus && demoLastFocus.focus) demoLastFocus.focus();
   }
+  window.openDemoModal = openDemoModal;
+  window.closeDemoModal = closeDemoModal;
+
   document.addEventListener('click', e => {
-    const trigger = e.target.closest('[data-calendly]');
-    if (trigger) { e.preventDefault(); openCal(); }
+    if (e.target.closest('[data-open-demo]')) { e.preventDefault(); openDemoModal(); return; }
+    if (e.target.closest('[data-demo-close]')) { e.preventDefault(); closeDemoModal(); }
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && cal && cal.classList.contains('open')) closeCal();
+    if (e.key === 'Escape' && demoModal && demoModal.classList.contains('open')) closeDemoModal();
   });
 
-  /* Expose Calendly URL for scripts that may want it (demo.js). */
-  window.__NEXUM_CALENDLY_URL = CALENDLY_URL;
+  /* Auto-open the demo modal when ?demo=1 is in the URL (legacy /demo.html redirect). */
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('demo') === '1') {
+      // Defer to the next tick so demo.js finishes wiring the form first.
+      setTimeout(openDemoModal, 60);
+      // Clean up the query so a refresh doesn't keep re-opening it.
+      const clean = window.location.pathname + window.location.hash;
+      history.replaceState(null, '', clean);
+    }
+  } catch (e) { /* non-critical */ }
 })();
