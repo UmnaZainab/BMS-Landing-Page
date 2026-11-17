@@ -68,12 +68,12 @@
           <div class="foot-social">
             <h4>Let's Connect</h4>
             <div class="foot-social-links">
-              <a class="soc" data-net="email" href="mailto:info@nexumglobal.solutions" aria-label="Email"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>Email</a>
-              <a class="soc" data-net="whatsapp" href="https://wa.me/923278223333" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg></span>WhatsApp</a>
-              <a class="soc" data-net="linkedin" href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.4 2.63 4.4 6.05V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V21H9z"/></svg></span>LinkedIn</a>
-              <a class="soc" data-net="facebook" href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.9 3.77-3.9 1.1 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></span>Facebook</a>
-              <a class="soc" data-net="instagram" href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></span>Instagram</a>
-              <a class="soc" data-net="youtube" href="https://www.youtube.com/@NexumGlobalSolutions" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="soc-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.4-.44-5.04a3 3 0 0 0-2.12-2.12C18.86 4.4 12 4.4 12 4.4s-6.86 0-8.44.44a3 3 0 0 0-2.12 2.12C1 8.6 1 12 1 12s0 3.4.44 5.04a3 3 0 0 0 2.12 2.12c1.58.44 8.44.44 8.44.44s6.86 0 8.44-.44a3 3 0 0 0 2.12-2.12C23 15.4 23 12 23 12Zm-13.2 3.2V8.8l5.7 3.2-5.7 3.2Z"/></svg></span>YouTube</a>
+              <a class="soc" data-net="email" href="mailto:info@nexumglobal.solutions" title="Email" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+              <a class="soc" data-net="whatsapp" href="https://wa.me/923278223333" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg></a>
+              <a class="soc" data-net="linkedin" href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.4 2.63 4.4 6.05V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V21H9z"/></svg></a>
+              <a class="soc" data-net="facebook" href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.9 3.77-3.9 1.1 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></a>
+              <a class="soc" data-net="instagram" href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+              <a class="soc" data-net="youtube" href="https://www.youtube.com/@NexumGlobalSolutions" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.4-.44-5.04a3 3 0 0 0-2.12-2.12C18.86 4.4 12 4.4 12 4.4s-6.86 0-8.44.44a3 3 0 0 0-2.12 2.12C1 8.6 1 12 1 12s0 3.4.44 5.04a3 3 0 0 0 2.12 2.12c1.58.44 8.44.44 8.44.44s6.86 0 8.44-.44a3 3 0 0 0 2.12-2.12C23 15.4 23 12 23 12Zm-13.2 3.2V8.8l5.7 3.2-5.7 3.2Z"/></svg></a>
             </div>
           </div>
         </div>
@@ -181,15 +181,6 @@
   }), { threshold: .6 }) : null;
   $$('[data-to]').forEach(el => countIO ? countIO.observe(el) : el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)));
 
-  /* ---------- Auto-hide nav on scroll ---------- */
-  const nav = $('.nav');
-  let lastY = window.scrollY;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (nav) nav.classList.toggle('hide', y > lastY && y > 260 && !$('#navLinks.open'));
-    lastY = y;
-  }, { passive: true });
-
   /* ---------- Hero flip word ---------- */
   const flip = document.getElementById('flipWord');
   if (flip) {
@@ -238,16 +229,10 @@
     }
   } catch (e) { /* non-critical */ }
 
-  /* ---------- Floating actions (back-to-top, quick chat, quick demo) ---------- */
+  /* ---------- Floating action — scroll-to-top only ---------- */
   const fab = document.createElement('div');
   fab.className = 'fab-stack';
   fab.innerHTML = `
-    <button class="fab whatsapp" type="button" aria-label="Chat on WhatsApp" title="Chat on WhatsApp" onclick="window.open('https://wa.me/923278223333','_blank','noopener')">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg>
-    </button>
-    <button class="fab chat" type="button" data-calendly aria-label="Quick demo" title="Book a quick demo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/></svg>
-    </button>
     <button class="fab" type="button" id="toTop" aria-label="Back to top" title="Back to top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
     </button>`;
