@@ -30,7 +30,7 @@
       <div class="nav-actions">
         <button class="theme" id="theme" aria-label="Switch to light mode" title="Change theme">☀</button>
         <a class="btn btn-ghost nav-cta-hide" href="#pricing">Get Pricing</a>
-        <a class="btn btn-primary" href="#demo">Book a Demo</a>
+        <a class="btn btn-primary" href="#demo" data-calendly>Book a Demo</a>
         <button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button>
       </div>
     </nav>`;
@@ -133,6 +133,8 @@
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
+    // Calendly-trigger links are handled by their own listener below.
+    if (a.closest('[data-calendly]')) return;
     const id = a.getAttribute('href');
     if (id.length <= 1) return;
     const target = document.querySelector(id);

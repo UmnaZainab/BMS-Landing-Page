@@ -423,10 +423,6 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .demo-points li::after{content:"→";position:absolute;left:22px;top:17px;color:var(--primary-2);font-weight:800}
 .demo-points b{display:block;color:#fff;font-size:14px;margin-bottom:3px}
 .demo-points span{color:var(--muted);font-size:13px;line-height:1.5}
-.demo-cal{margin-top:26px;padding:18px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line-2);display:flex;flex-direction:column;gap:12px}
-.demo-cal b{color:#fff;font-size:14px}
-.demo-cal small{color:var(--muted);font-size:12.5px;line-height:1.55}
-
 /* ---------- Form shared ---------- */
 .form{
   padding:32px;border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
@@ -599,3 +595,123 @@ footer{position:relative;margin-top:60px;background:var(--bg-2);border-top:1px s
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
   .reveal{opacity:1;transform:none}
 }
+
+/* ============================================================
+   LIGHT MODE OVERRIDES
+   Every section flips to white cards with #CBD5E1 borders and
+   #0B1526 / #334155 text. Hero preview card, process section and
+   footer stay intentionally dark navy with light text (product
+   mockup / brand footer). Forms use #F8FAFC inputs with #0F172A
+   text and #64748B placeholders.
+   ============================================================ */
+[data-theme="light"]{--line-2:#CBD5E1}
+
+/* Hero backdrop */
+[data-theme="light"] .hero{
+  background:
+    radial-gradient(900px 520px at 85% 10%,rgba(204,0,0,.1),transparent 60%),
+    radial-gradient(1200px 600px at -5% 40%,rgba(28,90,140,.14),transparent 60%),
+    linear-gradient(180deg,#EAF0F8,#F4F7FB 70%,transparent);
+}
+[data-theme="light"] .hero::before{
+  background-image:
+    linear-gradient(rgba(11,22,38,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(11,22,38,.05) 1px,transparent 1px);
+}
+[data-theme="light"] .hero-copy .eyebrow{background:#fff;border-color:#CBD5E1;color:#334155}
+[data-theme="light"] .hero-copy>p{color:#334155}
+[data-theme="light"] .trust{color:#334155}
+
+/* Navbar + mobile drawer */
+[data-theme="light"] .nav{border-color:#CBD5E1;box-shadow:0 12px 40px rgba(11,22,38,.1)}
+[data-theme="light"] .links a{color:#334155}
+[data-theme="light"] .links a:hover{color:#0B1526;background:rgba(11,22,38,.04)}
+[data-theme="light"] .links a.active{color:#8E0C1B;background:color-mix(in srgb,var(--primary) 12%,transparent)}
+[data-theme="light"] .theme{background:#F8FAFC;border-color:#CBD5E1;color:#334155}
+[data-theme="light"] .menu{background:rgba(11,22,38,.06);color:#0B1526}
+[data-theme="light"] .btn-ghost{background:#fff;border-color:#CBD5E1;color:#0B1526}
+[data-theme="light"] .btn-ghost:hover{background:#F8FAFC;border-color:color-mix(in srgb,var(--primary) 40%,#CBD5E1)}
+@media(max-width:920px){
+  [data-theme="light"] .links{background:#fff;border-color:#CBD5E1;box-shadow:0 20px 50px rgba(11,22,38,.14)}
+}
+
+/* Section descriptions */
+[data-theme="light"] .section-head p{color:#334155}
+
+/* About */
+[data-theme="light"] .about-card{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.06)}
+[data-theme="light"] .about-card::before{background:linear-gradient(135deg,rgba(204,0,0,.18),rgba(142,12,27,.28))}
+[data-theme="light"] .about-card b{color:#0B1526}
+[data-theme="light"] .about-card p{color:#334155}
+[data-theme="light"] .about-card:hover{background:#FFF7F8;border-color:color-mix(in srgb,var(--primary) 40%,#CBD5E1)}
+
+/* Features */
+[data-theme="light"] .features{
+  background:
+    radial-gradient(900px 420px at 50% 0%,rgba(204,0,0,.06),transparent 60%),
+    linear-gradient(180deg,transparent,rgba(11,22,38,.03));
+}
+[data-theme="light"] .feature{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.06)}
+[data-theme="light"] .feature h3{color:#0B1526}
+[data-theme="light"] .feature p{color:#334155}
+[data-theme="light"] .feature:hover{border-color:color-mix(in srgb,var(--primary) 50%,#CBD5E1);box-shadow:0 24px 50px rgba(204,0,0,.14)}
+
+/* Process — stays intentionally dark with white text (brand) */
+[data-theme="light"] .process-card{background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border-color:rgba(255,255,255,.14)}
+[data-theme="light"] .process-card h3{color:#fff}
+[data-theme="light"] .process-card p{color:#B0BCCD}
+
+/* Pricing */
+[data-theme="light"] .mod-card{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.06)}
+[data-theme="light"] .mod-card:hover{border-color:color-mix(in srgb,var(--primary) 50%,#CBD5E1);box-shadow:0 24px 55px rgba(204,0,0,.14)}
+[data-theme="light"] .mod-card.selected{background:linear-gradient(160deg,#FFF5F6,#fff);border-color:var(--primary);box-shadow:0 0 0 3px rgba(204,0,0,.12),0 24px 55px rgba(204,0,0,.14)}
+[data-theme="light"] .mod-head h4{color:#0B1526}
+[data-theme="light"] .mod-price{color:#0B1526}
+[data-theme="light"] .mod-price em{color:#334155}
+[data-theme="light"] .mod-feats li{color:#334155}
+[data-theme="light"] .mod-tag{background:rgba(11,22,38,.06);color:#334155;border-color:#CBD5E1}
+[data-theme="light"] .mod-tag.core{background:color-mix(in srgb,#38BDF8 18%,transparent);color:#0C6999;border-color:color-mix(in srgb,#38BDF8 44%,transparent)}
+[data-theme="light"] .mod-tag.impact{background:color-mix(in srgb,#22C55E 18%,transparent);color:#166534;border-color:color-mix(in srgb,#22C55E 44%,transparent)}
+[data-theme="light"] .cart-bar{background:#fff;border-color:#CBD5E1;box-shadow:0 20px 55px rgba(11,22,38,.12)}
+[data-theme="light"] .cart-info span:last-child{color:#0B1526}
+[data-theme="light"] .pricing-note{color:#92400E;background:color-mix(in srgb,#F59E0B 20%,transparent);border-color:color-mix(in srgb,#F59E0B 48%,transparent)}
+
+/* Demo */
+[data-theme="light"] .demo-points li{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.05)}
+[data-theme="light"] .demo-points b{color:#0B1526}
+[data-theme="light"] .demo-points span{color:#334155}
+[data-theme="light"] .demo-sel{color:#8E0C1B;background:color-mix(in srgb,var(--primary) 8%,transparent);border-color:color-mix(in srgb,var(--primary) 32%,transparent)}
+
+/* Contact */
+[data-theme="light"] .ch-card{background:#fff;border-color:#CBD5E1;box-shadow:0 10px 30px rgba(11,22,38,.06)}
+[data-theme="light"] .ch-card b{color:#0B1526}
+[data-theme="light"] .ch-card a,[data-theme="light"] .ch-card span{color:#334155}
+[data-theme="light"] .ch-card a:hover{color:var(--primary)}
+
+/* Forms */
+[data-theme="light"] .form{background:#fff;border-color:#CBD5E1;box-shadow:0 20px 50px rgba(11,22,38,.08)}
+[data-theme="light"] .form-title{color:#0B1526}
+[data-theme="light"] .field label{color:#0F172A}
+[data-theme="light"] .field input,
+[data-theme="light"] .field select,
+[data-theme="light"] .field textarea{background:#F8FAFC;color:#0F172A;border-color:#CBD5E1}
+[data-theme="light"] .field input::placeholder,
+[data-theme="light"] .field textarea::placeholder{color:#64748B}
+[data-theme="light"] .field input:focus,
+[data-theme="light"] .field select:focus,
+[data-theme="light"] .field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(204,0,0,.18)}
+
+/* Footer — stays dark navy regardless of theme (brand footer) */
+[data-theme="light"] footer{background:#080E1A;color:#F5F7FA;border-top:1px solid rgba(255,255,255,.08)}
+[data-theme="light"] .foot-brand p{color:#93A3B8}
+[data-theme="light"] .powered-by{color:#93A3B8}
+[data-theme="light"] .foot-office p,
+[data-theme="light"] .foot-office a,
+[data-theme="light"] .foot-col a{color:#93A3B8}
+[data-theme="light"] .foot-col a:hover,
+[data-theme="light"] .foot-office a:hover{color:var(--primary-2)}
+[data-theme="light"] .footer-legal-row,
+[data-theme="light"] .footer-legal-links a{color:#93A3B8}
+[data-theme="light"] .footer-legal-links a:hover{color:var(--primary-2)}
+
+/* Hero live-preview card stays dark (product dashboard mockup). No override. */
