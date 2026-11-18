@@ -6,12 +6,14 @@
   const money = n => `Rs ${n.toLocaleString('en-PK')}`;
 
   // Centralized module prices update the cards and live total automatically.
+  // Price IDs are the contract between pricing.js, the admin Pricing tab and
+  // /.netlify/functions/pricing — keep them in sync with the DEFAULTS list there.
   const modules = [
-    { name: 'Employee Management', tag: 'Core Module', tagClass: 'core', price: 5000, items: ['Employee profiles and account controls', 'Role-based access', 'Employment and reporting details'] },
-    { name: 'HR Management', tag: 'Popular Add-on', tagClass: '', price: 15000, items: ['Employee management workflows', 'Leave review and balances', 'Asset and equipment requests'] },
-    { name: 'Attendance & Leave', tag: 'High Impact', tagClass: 'impact', price: 8000, items: ['Check-in and check-out', 'Attendance records and late tracking', 'Leave requests and balances'] },
-    { name: 'Finance & Payroll', tag: 'Popular Add-on', tagClass: '', price: 10000, items: ['Salary and deduction management', 'Monthly payroll summaries', 'CSV exports and PDF payslips'] },
-    { name: 'Projects & Tasks', tag: 'High Impact', tagClass: 'impact', price: 12000, items: ['Projects and task assignment', 'Progress, status and due dates', 'Operational announcements'] }
+    { id: 'employee-management', name: 'Employee Management', tag: 'Core Module', tagClass: 'core', price: 5000, items: ['Employee profiles and account controls', 'Role-based access', 'Employment and reporting details'] },
+    { id: 'hr-management', name: 'HR Management', tag: 'Popular Add-on', tagClass: '', price: 15000, items: ['Employee management workflows', 'Leave review and balances', 'Asset and equipment requests'] },
+    { id: 'attendance-leave', name: 'Attendance & Leave', tag: 'High Impact', tagClass: 'impact', price: 8000, items: ['Check-in and check-out', 'Attendance records and late tracking', 'Leave requests and balances'] },
+    { id: 'finance-payroll', name: 'Finance & Payroll', tag: 'Popular Add-on', tagClass: '', price: 10000, items: ['Salary and deduction management', 'Monthly payroll summaries', 'CSV exports and PDF payslips'] },
+    { id: 'projects-tasks', name: 'Projects & Tasks', tag: 'High Impact', tagClass: 'impact', price: 12000, items: ['Projects and task assignment', 'Progress, status and due dates', 'Operational announcements'] }
   ];
   const svg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
   const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
@@ -23,7 +25,7 @@
     'Projects & Tasks': '<path d="M9 11h8M9 16h8M9 6h8"/><path d="m4 6 1 1 2-2M4 11l1 1 2-2M4 16l1 1 2-2"/>'
   };
 
-  $('#plans').innerHTML = `<div class="mod-grid">${modules.map(m => `<article class="mod-card reveal" data-mod="${m.name}"><span class="mod-badge">${check}</span><span class="mod-ic">${svg(icons[m.name])}</span><div class="mod-head"><h4>${m.name}</h4><span class="mod-tag ${m.tagClass}">${m.tag}</span></div><div class="mod-price">${money(m.price)}<em>/ mo</em></div><ul class="mod-feats">${m.items.map(it => `<li>${it}</li>`).join('')}</ul><button class="mod-btn" type="button" data-mod-btn="${m.name}">Add to Plan</button></article>`).join('')}</div>
+  $('#plans').innerHTML = `<div class="mod-grid">${modules.map(m => `<article class="mod-card reveal" data-mod="${m.name}" data-price-card="${m.id}"><span class="mod-badge">${check}</span><span class="mod-ic">${svg(icons[m.name])}</span><div class="mod-head"><h4>${m.name}</h4><span class="mod-tag ${m.tagClass}">${m.tag}</span></div><div class="mod-price"><span data-price-id="${m.id}" data-price-default="${m.price}">${money(m.price)}</span><em>/ mo</em></div><ul class="mod-feats">${m.items.map(it => `<li>${it}</li>`).join('')}</ul><button class="mod-btn" type="button" data-mod-btn="${m.name}">Add to Plan</button></article>`).join('')}</div>
     <div class="cart-bar reveal"><div class="cart-info"><span class="cart-count-pill" id="cartCount">0 selected</span><span id="cartTotal">Total: Rs 0 / mo</span></div><button class="cart-checkout" type="button" id="cartCheckout">Continue with Selected Plan <span>→</span></button></div>`;
 
   const selected = new Set();
@@ -41,6 +43,22 @@
     updateCart();
   }); });
   updateCart();
+
+  // Keep the live cart in sync with amounts fetched by common.js.
+  // common.js dispatches `nexum:prices-updated` with { detail: { items } } once the
+  // /.netlify/functions/pricing fetch resolves.
+  document.addEventListener('nexum:prices-updated', (event) => {
+    const items = (event.detail && event.detail.items) || [];
+    const byId  = {};
+    items.forEach(it => { if (it && it.id) byId[it.id] = it; });
+    let changed = false;
+    modules.forEach(m => {
+      const live = byId[m.id];
+      const next = live && Number(live.currentAmount);
+      if (Number.isFinite(next) && next !== m.price) { m.price = next; changed = true; }
+    });
+    if (changed) updateCart();
+  });
 
   $('#cartCheckout').addEventListener('click', () => {
     const names = modules.filter(m => selected.has(m.name)).map(m => m.name);

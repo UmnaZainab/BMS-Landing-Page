@@ -6,8 +6,9 @@
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#f7f8fc">
   <title>Admin · Inquiries | NExBMS</title>
-  <link rel="stylesheet" href="../style.css?v=108">
+  <link rel="stylesheet" href="../style.css?v=109">
   <style>
+    :root{--bg:var(--bg-0,#f7f8fc);--primary:#CC0000;--primary2:#FF3A4D;--primary-2:#FF3A4D;--success:#22c55e;--soft:color-mix(in srgb,var(--primary) 6%,var(--surface,#fff))}
     body[data-page="admin"]{background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;margin:0}
     .admin-wrap{max-width:1200px;margin:0 auto;padding:36px 20px 72px;width:100%;flex:1;box-sizing:border-box}
     .admin-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
@@ -73,6 +74,38 @@
     .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    /* Admin tabs: Inquiries / Pricing */
+    .admin-tabs{display:flex;gap:6px;margin:0 0 20px;padding:5px;background:var(--soft);border:1px solid var(--line);border-radius:12px;width:fit-content;flex-wrap:wrap}
+    .admin-tab{appearance:none;border:0;background:transparent;color:var(--muted);font:600 13.5px/1 inherit;padding:9px 16px;border-radius:9px;cursor:pointer;transition:background .15s,color .15s;font-family:inherit}
+    .admin-tab:hover{color:var(--ink)}
+    .admin-tab.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 4px 14px rgba(204,0,0,.22)}
+    .admin-tab:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+    .admin-panel[hidden]{display:none}
+
+    /* Pricing management table */
+    .pricing-card-head{padding:18px 20px;border-bottom:1px solid var(--line)}
+    .pricing-card-head h2{margin:0 0 4px;font-size:17px;color:var(--ink);letter-spacing:-.01em}
+    .pricing-card-head p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5}
+    .price-table{width:100%;border-collapse:collapse;font-size:14px}
+    .price-table th,.price-table td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+    .price-table th{background:var(--soft);font-weight:600;color:var(--ink);font-size:11.5px;letter-spacing:.6px;text-transform:uppercase}
+    .price-table tr:last-child td{border-bottom:none}
+    .price-table tbody tr:hover td{background:var(--soft)}
+    .price-card-name{font-weight:600;color:var(--ink)}
+    .price-input-wrap{display:inline-flex;align-items:center;gap:8px}
+    .price-input-wrap .currency{color:var(--muted);font-size:12.5px;font-weight:600;letter-spacing:.4px}
+    .price-input{width:140px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font-size:14px;font-variant-numeric:tabular-nums;outline:none;transition:border-color .15s,box-shadow .15s;font-family:inherit}
+    .price-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(204,0,0,.14)}
+    .price-input.dirty{border-color:var(--primary2)}
+    .price-default{display:inline-flex;align-items:center;gap:8px;color:var(--ink);font-variant-numeric:tabular-nums}
+    .price-default .in-use{font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--success) 15%,transparent);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 35%,transparent)}
+    .price-save{min-width:88px;justify-content:center}
+    .price-save.saved{background:var(--success);border-color:var(--success);color:#fff}
+    .price-save.saving{opacity:.75}
+    .price-row-status{display:block;font-size:12px;margin-top:6px;min-height:1em}
+    .price-row-status[data-kind="err"]{color:#c93c3c}
+    .price-row-status[data-kind="ok"]{color:var(--success)}
+
     @media (max-width: 720px){
       .admin-wrap{padding:24px 14px 48px}
       .admin-head{flex-direction:column;align-items:stretch}
@@ -84,6 +117,6 @@
 </head>
 <body data-page="admin" data-theme="light">
   <div id="app" aria-live="polite"></div>
-  <script src="./admin.js?v=5" defer></script>
+  <script src="./admin.js?v=6" defer></script>
 </body>
 </html>

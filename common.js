@@ -304,4 +304,27 @@
       history.replaceState(null, '', clean);
     }
   } catch (e) { /* non-critical */ }
+
+  /* ---------- Live pricing sync ----------
+     Overlays the default HTML prices with whatever is stored in MongoDB via
+     /.netlify/functions/pricing. The default numbers ship inline so the cards
+     stay readable instantly; this fetch replaces them once the API responds.
+     pricing.js listens for the dispatched event to keep its cart total current. */
+  if (document.querySelector('[data-price-id]')) {
+    fetch('/.netlify/functions/pricing', { credentials: 'same-origin' })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (!j || !j.ok || !Array.isArray(j.items)) return;
+        const fmt = n => `Rs ${Number(n).toLocaleString('en-PK')}`;
+        j.items.forEach(it => {
+          if (!it || !it.id) return;
+          document.querySelectorAll(`[data-price-id="${it.id}"]`).forEach(el => {
+            const amount = Number(it.currentAmount);
+            if (Number.isFinite(amount)) el.textContent = fmt(amount);
+          });
+        });
+        document.dispatchEvent(new CustomEvent('nexum:prices-updated', { detail: { items: j.items } }));
+      })
+      .catch(() => { /* leave defaults in place */ });
+  }
 })();
