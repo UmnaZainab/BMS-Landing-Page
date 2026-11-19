@@ -5,19 +5,18 @@
 (function () {
   const page = document.body.dataset.page || 'home';
   const logoMark = `<span class="logo" aria-hidden="true">
-    <svg viewBox="0 0 40 40" focusable="false">
-      <path class="logo-n" d="M8.5 28V12l11 16V12" />
-      <path class="logo-b" d="M22 12h5.2a4 4 0 0 1 0 8H22m0 0h6.2a4 4 0 0 1 0 8H22V12" />
-      <circle class="logo-node node-a" cx="8.5" cy="12" r="1.6" />
-      <circle class="logo-node node-b" cx="19.5" cy="28" r="1.6" />
-      <circle class="logo-node node-c" cx="32.2" cy="20" r="1.6" />
+    <svg viewBox="0 0 38 38" focusable="false">
+      <rect width="38" height="38" rx="10" fill="#CC0000" />
+      <path d="M10 1h18" stroke="#FFFFFF" stroke-opacity=".22" stroke-linecap="round" />
+      <path d="M9 28V10h4.3l11.4 11.3V10H29v18h-4.3L13.3 16.7V28Z" fill="#FFFFFF" />
+      <path d="M15 10h2.4l2.8 2.8h-2.4Z" fill="#CC0000" />
     </svg>
   </span>`;
 
   const header = document.getElementById('site-header');
   if (header) header.innerHTML = `
     <nav class="nav container" aria-label="Primary navigation">
-      <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>Nexum Global Solutions</small></span></a>
+      <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>NEXUM GLOBAL SOLUTIONS</small></span></a>
       <div class="links" id="navLinks">
         <a href="#home" data-nav="home">Home</a>
         <a href="#about" data-nav="about">About</a>
@@ -40,7 +39,7 @@
       <div class="foot-card">
         <div class="foot-grid">
           <div class="foot-brand">
-            <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>Nexum Global Solutions</small></span></a>
+            <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>NEXUM GLOBAL SOLUTIONS</small></span></a>
             <p>Unified people, operations and delivery management for growing teams, built by Nexum Global Solutions.</p>
             <span class="powered-by">Powered by <a href="https://nexumglobal.solutions/" target="_blank" rel="noopener noreferrer"><strong>Nexum Global Solutions</strong></a></span>
           </div>

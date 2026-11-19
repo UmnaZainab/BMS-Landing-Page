@@ -6,7 +6,8 @@
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#f7f8fc">
   <title>Admin · Inquiries | NExBMS</title>
-  <link rel="stylesheet" href="../style.css?v=109">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../style.css?v=110">
   <style>
     :root{--bg:var(--bg-0,#f7f8fc);--primary:#CC0000;--primary2:#FF3A4D;--primary-2:#FF3A4D;--success:#22c55e;--soft:color-mix(in srgb,var(--primary) 6%,var(--surface,#fff))}
     body[data-page="admin"]{background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;margin:0}
@@ -15,8 +16,11 @@
     .admin-head h1{font-size:28px;margin:0;color:var(--ink);letter-spacing:-.01em}
     .admin-head .sub{color:var(--muted);font-size:14px;margin-top:4px}
     .admin-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none;font-size:15px}
-    .brand .dot{width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,var(--primary),var(--primary2))}
+    .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
+    .brand .logo{width:38px;height:38px;border-radius:10px;flex:none}
+    .brand .logo svg{display:block;width:38px;height:38px}
+    .brand b{display:block;font-size:17px;font-weight:800;line-height:1.1}
+    .brand small{display:block;margin-top:3px;color:var(--muted);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 
     .login-shell{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;box-sizing:border-box}
     .login-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:34px;width:100%;max-width:420px;box-sizing:border-box}
@@ -117,6 +121,6 @@
 </head>
 <body data-page="admin" data-theme="light">
   <div id="app" aria-live="polite"></div>
-  <script src="./admin.js?v=6" defer></script>
+  <script src="./admin.js?v=7" defer></script>
 </body>
 </html>

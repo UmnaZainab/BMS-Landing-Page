@@ -25,6 +25,7 @@
     pricing: '/.netlify/functions/pricing',
   };
   const HOME = '../index.html';
+  const logoMark = `<span class="logo" aria-hidden="true"><svg viewBox="0 0 38 38" focusable="false"><rect width="38" height="38" rx="10" fill="#CC0000"/><path d="M10 1h18" stroke="#FFFFFF" stroke-opacity=".22" stroke-linecap="round"/><path d="M9 28V10h4.3l11.4 11.3V10H29v18h-4.3L13.3 16.7V28Z" fill="#FFFFFF"/><path d="M15 10h2.4l2.8 2.8h-2.4Z" fill="#CC0000"/></svg></span>`;
 
   let appEl = null;
   let loginInFlight = false;
@@ -61,7 +62,7 @@
     appEl.innerHTML = `
       <section class="login-shell">
         <form class="login-card" id="loginForm" novalidate>
-          <a class="brand" href="${HOME}"><span class="dot"></span>NExBMS</a>
+          <a class="brand" href="${HOME}">${logoMark}<span><b>NExBMS</b><small>NEXUM GLOBAL SOLUTIONS</small></span></a>
           <h1>Admin sign in</h1>
           <p class="sub">Access the inquiries dashboard.</p>
           <div class="field">
@@ -88,7 +89,7 @@
       <div class="admin-wrap">
         <div class="admin-head">
           <div>
-            <a class="brand" href="${HOME}" style="margin-bottom:8px"><span class="dot"></span>NExBMS</a>
+            <a class="brand" href="${HOME}" style="margin-bottom:8px">${logoMark}<span><b>NExBMS</b><small>NEXUM GLOBAL SOLUTIONS</small></span></a>
             <h1 id="panelTitle">Inquiries</h1>
             <div class="sub" id="panelSub">Messages submitted via the Contact Us form.</div>
           </div>
