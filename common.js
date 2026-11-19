@@ -245,9 +245,47 @@
       }
     }
 
-    /* Chart range tabs: This Week / Month */
+    /* Chart range tabs: This Week / Month.
+       Switching the range updates the bar heights, replays the rise, flags the
+       peak bar for the glow, refreshes each bar's tooltip value, and
+       re-animates the four KPI numbers to the range's target values. */
     const segButtons = dash ? [...dash.querySelectorAll('.hd-seg button[data-range]')] : [];
     const chartBars = dash ? [...dash.querySelectorAll('.hd-chart i')] : [];
+    const kpiNumbers = dash ? [...dash.querySelectorAll('.hd-kpi [data-to]')] : [];
+    const kpiTargets = {
+      week: [248, 94.2, 8, 5],
+      month: [252, 92.8, 12, 7]
+    };
+    const animateNumber = (el, to) => {
+      const dec = +(el.dataset.dec || 0);
+      const from = parseFloat(el.textContent) || 0;
+      if (Math.abs(from - to) < 0.01) { el.textContent = to.toFixed(dec); return; }
+      let t0 = null; const dur = 700;
+      const tick = t => {
+        if (t0 === null) t0 = t;
+        const pr = Math.min((t - t0) / dur, 1);
+        const v = 1 - Math.pow(1 - pr, 3);
+        el.textContent = (from + (to - from) * v).toFixed(dec);
+        if (pr < 1) requestAnimationFrame(tick); else el.textContent = to.toFixed(dec);
+      };
+      requestAnimationFrame(tick);
+    };
+    const flagPeak = range => {
+      let peakIdx = -1, peakVal = -1;
+      chartBars.forEach((bar, i) => {
+        const v = +(bar.dataset[range] || 0);
+        if (v > peakVal) { peakVal = v; peakIdx = i; }
+      });
+      chartBars.forEach((bar, i) => bar.classList.toggle('peak', i === peakIdx));
+    };
+    const refreshTooltips = range => chartBars.forEach(bar => {
+      const v = bar.dataset[range];
+      if (!v) return;
+      bar.setAttribute('data-value', v + '%');
+      const em = bar.querySelector('em');
+      if (em) em.textContent = v + '%';
+    });
+    if (chartBars.length) { flagPeak('week'); refreshTooltips('week'); }
     if (segButtons.length && chartBars.length) {
       const setRange = range => {
         segButtons.forEach(b => {
@@ -259,10 +297,32 @@
           const target = bar.dataset[range] || bar.style.height.replace('%', '');
           bar.style.height = target + '%';
         });
+        refreshTooltips(range);
+        flagPeak(range);
         replayBars();
+        const targets = kpiTargets[range] || kpiTargets.week;
+        kpiNumbers.forEach((el, i) => animateNumber(el, targets[i] != null ? targets[i] : +(el.dataset.to)));
       };
       segButtons.forEach(btn => btn.addEventListener('click', () => setRange(btn.dataset.range)));
     }
+
+    /* Pending Requests: approve / decline with state pill */
+    const reqRows = dash ? [...dash.querySelectorAll('.req-row')] : [];
+    reqRows.forEach(row => {
+      const state = row.querySelector('.req-state');
+      const approve = row.querySelector('.req-approve');
+      const decline = row.querySelector('.req-decline');
+      if (approve) approve.addEventListener('click', () => {
+        row.classList.remove('is-declined');
+        row.classList.add('is-approved');
+        if (state) state.setAttribute('data-label', 'Approved');
+      });
+      if (decline) decline.addEventListener('click', () => {
+        row.classList.remove('is-approved');
+        row.classList.add('is-declined');
+        if (state) state.setAttribute('data-label', 'Declined');
+      });
+    });
   } catch (e) { /* non-critical */ }
 
   /* ---------- Architecture: popovers + connector highlighting ---------- */
