@@ -11,7 +11,7 @@
   <meta property="og:site_name" content="NExBMS">
   <meta property="og:url" content="https://nexbms.com/">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./style.css?v=12">
+  <link rel="stylesheet" href="./style.css?v=13">
 </head>
 <body data-page="home">
 
@@ -24,9 +24,9 @@
          ========================================================= -->
     <section class="hero" id="home">
       <div class="container hero-inner">
-        <div class="hero-copy">
+        <div class="hero-copy reveal">
           <span class="eyebrow">Centralized Company Operations</span>
-          <h1>One clear system for<br><span class="gradient-text">your entire company.</span></h1>
+          <h1>One clear system for<br>your entire <span class="rotator" aria-live="polite"><span class="rotator-word" data-rotate>company</span></span><span class="rotator-dot">.</span></h1>
           <p>NExBMS connects people, attendance, leave, payroll, projects, tasks, workplace assets and company communications in a secure, role aware platform.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="https://calendly.com/nexumglobalsolutions" target="_blank" rel="noopener noreferrer">Book a Demo <span>→</span></a>
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <div class="hero-preview">
+        <div class="hero-preview reveal">
           <div class="metric-pills">
             <div class="pill one">
               <span class="pill-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg></span>
@@ -73,7 +73,7 @@
                     <small>HR MANAGER · WORKFORCE</small>
                     <h3>HR Analytics &amp; Workforce Overview</h3>
                   </div>
-                  <div class="hd-seg"><span class="on">This Week</span><span>Month</span></div>
+                  <div class="hd-seg" role="tablist" aria-label="Chart range"><button type="button" class="on" data-range="week" role="tab" aria-selected="true">This Week</button><button type="button" data-range="month" role="tab" aria-selected="false">Month</button></div>
                 </div>
                 <div class="hd-kpis">
                   <div class="hd-kpi">
@@ -104,15 +104,15 @@
                 <div class="hd-grid">
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Department Distribution</b><span>248 people</span></div>
-                    <div class="donut-row"><div class="donut department"><span>248</span></div><ul><li><i></i>Operations <b>42%</b></li><li><i></i>Product <b>35%</b></li><li><i></i>Support <b>23%</b></li></ul></div>
+                    <div class="donut-row"><div class="donut department"><svg class="donut-svg" viewBox="0 0 100 100" aria-hidden="true"><circle class="donut-bg" cx="50" cy="50" r="42" fill="none" stroke-width="12"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#CC0000" stroke-width="12" data-pct="42" data-start="0"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#FF7180" stroke-width="12" data-pct="35" data-start="42"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#475569" stroke-width="12" data-pct="23" data-start="77"/></svg><span>248</span></div><ul><li><i></i>Operations <b>42%</b></li><li><i></i>Product <b>35%</b></li><li><i></i>Support <b>23%</b></li></ul></div>
                   </div>
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Leave Status</b><span>This month</span></div>
-                    <div class="donut-row"><div class="donut leave"><span>76%</span></div><ul><li><i></i>Approved <b>76%</b></li><li><i></i>Pending <b>16%</b></li><li><i></i>Declined <b>8%</b></li></ul></div>
+                    <div class="donut-row"><div class="donut leave"><svg class="donut-svg" viewBox="0 0 100 100" aria-hidden="true"><circle class="donut-bg" cx="50" cy="50" r="42" fill="none" stroke-width="12"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#CC0000" stroke-width="12" data-pct="76" data-start="0"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#FF7180" stroke-width="12" data-pct="16" data-start="76"/><circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#475569" stroke-width="12" data-pct="8" data-start="92"/></svg><span>76%</span></div><ul><li><i></i>Approved <b>76%</b></li><li><i></i>Pending <b>16%</b></li><li><i></i>Declined <b>8%</b></li></ul></div>
                   </div>
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Attendance Trends</b><span>12 weeks</span></div>
-                    <div class="hd-chart"><i style="height:62%"></i><i style="height:74%"></i><i style="height:58%"></i><i style="height:80%"></i><i style="height:70%"></i><i style="height:88%"></i><i style="height:66%"></i><i style="height:92%"></i><i style="height:78%"></i><i style="height:84%"></i><i style="height:73%"></i><i style="height:90%"></i></div>
+                    <div class="hd-chart" data-chart="attendance"><i data-week="62" data-month="55" style="height:62%"></i><i data-week="74" data-month="68" style="height:74%"></i><i data-week="58" data-month="72" style="height:58%"></i><i data-week="80" data-month="60" style="height:80%"></i><i data-week="70" data-month="85" style="height:70%"></i><i data-week="88" data-month="78" style="height:88%"></i><i data-week="66" data-month="82" style="height:66%"></i><i data-week="92" data-month="90" style="height:92%"></i><i data-week="78" data-month="74" style="height:78%"></i><i data-week="84" data-month="88" style="height:84%"></i><i data-week="73" data-month="70" style="height:73%"></i><i data-week="90" data-month="86" style="height:90%"></i></div>
                   </div>
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Pending Requests</b><span>Needs review</span></div>
@@ -208,12 +208,54 @@
             <path d="M500 0 C500 70 83 48 83 120"/><path d="M500 0 C500 70 250 48 250 120"/><path d="M500 0 C500 70 417 48 417 120"/><path d="M500 0 C500 70 583 48 583 120"/><path d="M500 0 C500 70 750 48 750 120"/><path d="M500 0 C500 70 917 48 917 120"/>
           </svg>
           <div class="arch-grid">
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><strong>HR Management</strong></div>
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M12 13v3l2 1"/></svg></span><strong>Time &amp; Attendance</strong></div>
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Zm0 0V6a3 3 0 0 1 3-3h13v5M16 14h5"/></svg></span><strong>Automated Payroll</strong></div>
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M3 6l1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg></span><strong>Tasks &amp; Projects</strong></div>
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span><strong>Access Control</strong></div>
-            <div class="arch-card" tabindex="0"><span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 18v-6h3v6M11 18V5h3v13M16 18V9h3v9"/></svg></span><strong>Reports</strong></div>
+            <div class="arch-card" tabindex="0" data-idx="0" data-accent="crimson">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span>
+              <strong>HR Management</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>HR Management</b>
+                <ul><li>Employee Directory</li><li>Onboarding Workflows</li><li>Document Vault</li><li>Asset Allocation</li></ul>
+              </div>
+            </div>
+            <div class="arch-card" tabindex="0" data-idx="1" data-accent="sky">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M12 13v3l2 1"/></svg></span>
+              <strong>Time &amp; Attendance</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>Time &amp; Attendance</b>
+                <ul><li>Biometric Integration</li><li>Geofencing Check in</li><li>Shift Scheduling</li><li>Overtime Logs</li></ul>
+              </div>
+            </div>
+            <div class="arch-card" tabindex="0" data-idx="2" data-accent="crimson">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Zm0 0V6a3 3 0 0 1 3-3h13v5M16 14h5"/></svg></span>
+              <strong>Automated Payroll</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>Automated Payroll</b>
+                <ul><li>Gross to Net Salary</li><li>Tax &amp; Benefit Deductions</li><li>One Click PDF Payslips</li><li>Payroll Cycle Audit</li></ul>
+              </div>
+            </div>
+            <div class="arch-card" tabindex="0" data-idx="3" data-accent="amber">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M3 6l1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg></span>
+              <strong>Tasks &amp; Projects</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>Tasks &amp; Projects</b>
+                <ul><li>Sprint Planning</li><li>Milestone Tracking</li><li>Task Delegation</li><li>Progress Insights</li></ul>
+              </div>
+            </div>
+            <div class="arch-card" tabindex="0" data-idx="4" data-accent="indigo">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span>
+              <strong>Access Control</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>Access Control</b>
+                <ul><li>Role Based Permissions (RBAC)</li><li>Multi Tenant Security</li><li>Audit Logs</li><li>Session Protection</li></ul>
+              </div>
+            </div>
+            <div class="arch-card" tabindex="0" data-idx="5" data-accent="emerald">
+              <span class="arch-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 18v-6h3v6M11 18V5h3v13M16 18V9h3v9"/></svg></span>
+              <strong>Reports</strong>
+              <div class="arch-pop" role="tooltip" aria-hidden="true">
+                <b>Reports</b>
+                <ul><li>Workforce Analytics</li><li>Attendance Heatmaps</li><li>Exportable CSV &amp; Excel</li><li>Department Summaries</li></ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -352,6 +394,7 @@
 
   <script src="./pricing.js?v=202" defer></script>
   <script src="./contact.js?v=200" defer></script>
-  <script src="./common.js?v=10" defer></script>
+  <script src="./common.js?v=13" defer></script>
+  <script src="./motion-effects.js?v=5" defer></script>
 </body>
 </html>

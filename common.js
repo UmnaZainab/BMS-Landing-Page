@@ -179,25 +179,159 @@
   }), { threshold: .6 }) : null;
   $$('[data-to]').forEach(el => countIO ? countIO.observe(el) : el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)));
 
-  /* ---------- Hero sidebar walkthrough ---------- */
+  /* ---------- Hero rotating word ----------
+     Cycles through company, business, workforce, operations every 2.6s with
+     a vertical slide and fade. The flush period dot stays attached. */
+  try {
+    const rotWord = document.querySelector('[data-rotate]');
+    if (rotWord && !reduce) {
+      const words = ['company', 'business', 'workforce', 'operations'];
+      let wi = Math.max(0, words.indexOf(rotWord.textContent.trim()));
+      if (wi < 0) wi = 0;
+      const swap = () => {
+        rotWord.classList.add('rot-out');
+        setTimeout(() => {
+          wi = (wi + 1) % words.length;
+          rotWord.textContent = words[wi];
+          /* Snap to the entry position without animating through the visible
+             mid state, then re-enable transition on the next frame. */
+          rotWord.style.transition = 'none';
+          rotWord.classList.remove('rot-out');
+          rotWord.classList.add('rot-in');
+          void rotWord.offsetWidth;
+          requestAnimationFrame(() => {
+            rotWord.style.transition = '';
+            requestAnimationFrame(() => rotWord.classList.remove('rot-in'));
+          });
+        }, 480);
+      };
+      let rotTimer = setInterval(swap, 2600);
+      document.addEventListener('visibilitychange', () => {
+        clearInterval(rotTimer);
+        if (!document.hidden) rotTimer = setInterval(swap, 2600);
+      });
+    }
+  } catch (e) { /* non-critical */ }
+
+  /* ---------- Hero sidebar: click to highlight, auto-cycle when idle ---------- */
   try {
     const dash = document.querySelector('.hero-card');
     const demoItems = dash ? [...dash.querySelectorAll('.side-item')] : [];
-    if (dash && demoItems.length > 1 && !reduce) {
-      const bars = [...dash.querySelectorAll('.hd-chart i')];
+    const bars = dash ? [...dash.querySelectorAll('.hd-chart i')] : [];
+    const replayBars = () => bars.forEach(b => { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; });
+    if (dash && demoItems.length > 1) {
       let di = Math.max(0, demoItems.findIndex(i => i.classList.contains('active')));
-      const replayBars = () => bars.forEach(b => { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; });
-      const step = () => {
-        demoItems[di].classList.remove('active');
-        di = (di + 1) % demoItems.length;
-        demoItems[di].classList.add('active');
+      let userInteracted = false;
+      const activate = idx => {
+        demoItems.forEach(i => i.classList.remove('active'));
+        demoItems[idx].classList.add('active');
+        di = idx;
         replayBars();
       };
-      let demoTimer = setInterval(step, 2200);
-      document.addEventListener('visibilitychange', () => {
-        clearInterval(demoTimer);
-        if (!document.hidden) demoTimer = setInterval(step, 2200);
+      demoItems.forEach((item, idx) => {
+        item.setAttribute('role', 'tab');
+        item.addEventListener('click', () => { userInteracted = true; activate(idx); });
       });
+      const step = () => {
+        if (userInteracted) return;
+        activate((di + 1) % demoItems.length);
+      };
+      if (!reduce) {
+        let demoTimer = setInterval(step, 2400);
+        document.addEventListener('visibilitychange', () => {
+          clearInterval(demoTimer);
+          if (!document.hidden && !userInteracted) demoTimer = setInterval(step, 2400);
+        });
+      }
+    }
+
+    /* Chart range tabs: This Week / Month */
+    const segButtons = dash ? [...dash.querySelectorAll('.hd-seg button[data-range]')] : [];
+    const chartBars = dash ? [...dash.querySelectorAll('.hd-chart i')] : [];
+    if (segButtons.length && chartBars.length) {
+      const setRange = range => {
+        segButtons.forEach(b => {
+          const on = b.dataset.range === range;
+          b.classList.toggle('on', on);
+          b.setAttribute('aria-selected', String(on));
+        });
+        chartBars.forEach(bar => {
+          const target = bar.dataset[range] || bar.style.height.replace('%', '');
+          bar.style.height = target + '%';
+        });
+        replayBars();
+      };
+      segButtons.forEach(btn => btn.addEventListener('click', () => setRange(btn.dataset.range)));
+    }
+  } catch (e) { /* non-critical */ }
+
+  /* ---------- Architecture: popovers + connector highlighting ---------- */
+  try {
+    const archCards = document.querySelectorAll('.arch-card[data-idx]');
+    const archPaths = document.querySelectorAll('.arch-lines path');
+    if (archCards.length) {
+      const closeAll = () => archCards.forEach(c => c.classList.remove('arch-open'));
+      const dimPaths = activeIdx => {
+        archPaths.forEach((p, i) => {
+          p.classList.remove('active', 'dim');
+          if (activeIdx == null) return;
+          if (i === activeIdx) p.classList.add('active');
+          else p.classList.add('dim');
+        });
+      };
+      const resetPaths = () => archPaths.forEach(p => p.classList.remove('active', 'dim'));
+      archCards.forEach(card => {
+        const idx = +card.dataset.idx;
+        card.addEventListener('mouseenter', () => dimPaths(idx));
+        card.addEventListener('focusin', () => dimPaths(idx));
+        card.addEventListener('mouseleave', resetPaths);
+        card.addEventListener('focusout', resetPaths);
+        card.addEventListener('click', e => {
+          const touchy = matchMedia('(hover: none)').matches;
+          if (!touchy) return;
+          const isOpen = card.classList.contains('arch-open');
+          closeAll();
+          if (!isOpen) card.classList.add('arch-open');
+          e.stopPropagation();
+        });
+      });
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.arch-card')) closeAll();
+      });
+    }
+  } catch (e) { /* non-critical */ }
+
+  /* ---------- Donut SVG segments: animate stroke-dashoffset on view ---------- */
+  try {
+    const donuts = document.querySelectorAll('.donut');
+    if (donuts.length) {
+      const R = 42;
+      const CIRC = 2 * Math.PI * R;
+      donuts.forEach(d => {
+        const segs = d.querySelectorAll('.donut-seg');
+        const bg = d.querySelector('.donut-bg');
+        if (bg) bg.setAttribute('stroke-dasharray', CIRC.toFixed(2));
+        segs.forEach(s => {
+          const pct = Math.max(0, Math.min(100, parseFloat(s.dataset.pct) || 0));
+          const start = Math.max(0, Math.min(100, parseFloat(s.dataset.start) || 0));
+          const segLen = CIRC * (pct / 100);
+          s.setAttribute('stroke-dasharray', `${segLen.toFixed(2)} ${(CIRC - segLen + 1).toFixed(2)}`);
+          s.style.strokeDashoffset = segLen.toFixed(2);
+          const rot = -90 + (start / 100) * 360;
+          s.setAttribute('transform', `rotate(${rot.toFixed(2)} 50 50)`);
+        });
+      });
+      const donutIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          donutIO.unobserve(e.target);
+          const segs = e.target.querySelectorAll('.donut-seg');
+          segs.forEach((s, i) => {
+            setTimeout(() => { s.style.strokeDashoffset = '0'; }, 120 + i * 180);
+          });
+        });
+      }, { threshold: .35 }) : null;
+      donuts.forEach(d => donutIO ? donutIO.observe(d) : d.querySelectorAll('.donut-seg').forEach(s => s.style.strokeDashoffset = '0'));
     }
   } catch (e) { /* non-critical */ }
 
