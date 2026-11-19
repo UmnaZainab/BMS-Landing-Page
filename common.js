@@ -228,6 +228,50 @@
     window.addEventListener('resize', upd, { passive: true });
   }
 
+  /* ---------- Insights article preview ---------- */
+  const insightButtons = document.querySelectorAll('[data-insight]');
+  if (insightButtons.length) {
+    const guides = {
+      hybrid: {
+        type: 'Workforce', title: 'The Future of Hybrid Workforce Management',
+        summary: 'Hybrid teams work best when shared expectations are visible. A single workspace can connect attendance, tasks and team communication so managers can support outcomes without relying on scattered updates.',
+        takeaways: ['Set clear attendance and availability expectations for every role.', 'Keep task progress and team notices in a shared workspace.', 'Review patterns regularly and adjust routines with employee feedback.']
+      },
+      payroll: {
+        type: 'Payroll', title: 'Automating Payroll Compliance',
+        summary: 'Payroll accuracy depends on consistent source data and a reviewable process. Bringing attendance, leave and salary calculations together helps teams catch discrepancies before each cycle closes.',
+        takeaways: ['Use one approved source for attendance and leave records.', 'Review deductions and exceptions before payroll is finalized.', 'Keep a clear audit trail and issue consistent PDF payslips.']
+      },
+      security: {
+        type: 'Security', title: 'Role Based Access Done Right',
+        summary: 'Growing teams need access that follows responsibilities. Role based permissions help people find the tools they need while reducing exposure of payroll, personal and operational data.',
+        takeaways: ['Define access by job responsibility rather than convenience.', 'Review permissions when roles or teams change.', 'Log sensitive actions so administrators can investigate issues.']
+      }
+    };
+    const dialog = document.createElement('dialog');
+    dialog.className = 'insight-dialog';
+    dialog.setAttribute('aria-labelledby', 'insightDialogTitle');
+    dialog.innerHTML = '<div class="insight-dialog-content"><div class="insight-dialog-top"><span class="insight-type" id="insightDialogType"></span><button class="insight-dialog-close" type="button" aria-label="Close article preview">×</button></div><h2 id="insightDialogTitle"></h2><p id="insightDialogSummary"></p><h3>Key takeaways</h3><ul id="insightDialogTakeaways"></ul></div>';
+    document.body.appendChild(dialog);
+    const closeButton = dialog.querySelector('.insight-dialog-close');
+    closeButton.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+    let opener = null;
+    dialog.addEventListener('close', () => { if (opener) opener.focus(); });
+    insightButtons.forEach(button => button.addEventListener('click', () => {
+      const guide = guides[button.dataset.insight];
+      if (!guide) return;
+      opener = button;
+      dialog.querySelector('#insightDialogType').textContent = guide.type;
+      dialog.querySelector('#insightDialogTitle').textContent = guide.title;
+      dialog.querySelector('#insightDialogSummary').textContent = guide.summary;
+      const list = dialog.querySelector('#insightDialogTakeaways');
+      list.replaceChildren(...guide.takeaways.map(item => { const li = document.createElement('li'); li.textContent = item; return li; }));
+      dialog.showModal();
+      closeButton.focus();
+    }));
+  }
+
   /* ---------- Live pricing sync ----------
      Overlays the default HTML prices with whatever is stored in MongoDB via
      /.netlify/functions/pricing. The default numbers ship inline so the cards
