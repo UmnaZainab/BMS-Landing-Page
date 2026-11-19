@@ -361,40 +361,39 @@
     }
   } catch (e) { /* non-critical */ }
 
-  /* ---------- Donut SVG segments: layered stroke-dashoffset reveal ----------
-     Each donut is three stacked full circles with pathLength=100 and a single
-     dash of length 100. The group is rotated -90 so the dash starts at 12
-     o'clock. We animate stroke-dashoffset from 100 (hidden) to (100 - end%),
-     where end% is the cumulative percentage this layer covers. Painting order
-     is deepest-first (slate, then pink, then red), so the layers stack
-     cleanly into the ring without any per-segment transform. */
+  /* ---------- Donut SVG segments: progressive draw-in on scroll ----------
+     The SVG markup carries the final stroke-dasharray and stroke-dashoffset
+     values for each segment, so the colored arcs are visible from first paint
+     and stay visible even if this script never runs or reduced motion is
+     active. If the donut is NOT in view at script start, we park it at
+     dashoffset:100 (hidden) and let the CSS transition draw each segment in
+     when the IntersectionObserver fires. Donuts already in the viewport on
+     load keep their markup values untouched. */
   try {
     const donuts = document.querySelectorAll('.donut');
-    if (donuts.length) {
-      donuts.forEach(d => {
-        const segs = d.querySelectorAll('.donut-seg');
-        segs.forEach(s => {
-          const end = Math.max(0, Math.min(100, parseFloat(s.dataset.end) || 0));
-          s.setAttribute('stroke-dasharray', '100');
-          s.setAttribute('stroke-dashoffset', '100');
-          s.dataset.target = String(100 - end);
-        });
-      });
-      const reveal = d => {
-        d.classList.add('animate');
-        const segs = d.querySelectorAll('.donut-seg');
-        segs.forEach((s, i) => {
-          setTimeout(() => { s.style.strokeDashoffset = s.dataset.target; }, 160 + i * 220);
-        });
+    if (donuts.length && !reduce && 'IntersectionObserver' in window) {
+      const inView = el => {
+        const r = el.getBoundingClientRect();
+        return r.top < (window.innerHeight || document.documentElement.clientHeight) && r.bottom > 0;
       };
-      const donutIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      const park = d => d.querySelectorAll('.donut-seg').forEach(s => {
+        const end = Math.max(0, Math.min(100, parseFloat(s.dataset.end) || 0));
+        s.dataset.target = String(100 - end);
+        s.setAttribute('stroke-dashoffset', '100');
+      });
+      const draw = d => d.querySelectorAll('.donut-seg').forEach((s, i) => {
+        const target = s.dataset.target != null ? s.dataset.target : String(100 - (parseFloat(s.dataset.end) || 0));
+        setTimeout(() => s.setAttribute('stroke-dashoffset', target), 140 + i * 200);
+      });
+      donuts.forEach(d => { if (!inView(d)) park(d); });
+      const donutIO = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           donutIO.unobserve(e.target);
-          reveal(e.target);
+          draw(e.target);
         });
-      }, { threshold: .35 }) : null;
-      donuts.forEach(d => donutIO ? donutIO.observe(d) : reveal(d));
+      }, { threshold: .35 });
+      donuts.forEach(d => donutIO.observe(d));
     }
   } catch (e) { /* non-critical */ }
 

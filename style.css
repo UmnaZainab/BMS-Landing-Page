@@ -800,6 +800,14 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .req-row[data-emp="lp"] .req-avatar{background:linear-gradient(135deg,#F59E0B,#B45309);box-shadow:0 4px 10px rgba(245,158,11,.3),inset 0 1px 0 rgba(255,255,255,.18)}
 .req-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.25}
 .req-info b{color:var(--ink);font-size:12.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Employee name tints: readable, crisp against both themes. The hue matches
+   each row's avatar color so the row reads as one visual unit. */
+.req-row[data-emp="sc"] .req-info b{color:#FF8FA3}
+.req-row[data-emp="oa"] .req-info b{color:#7DD3FC}
+.req-row[data-emp="lp"] .req-info b{color:#FCD34D}
+[data-theme="light"] .req-row[data-emp="sc"] .req-info b{color:#BE123C}
+[data-theme="light"] .req-row[data-emp="oa"] .req-info b{color:#1D4ED8}
+[data-theme="light"] .req-row[data-emp="lp"] .req-info b{color:#B45309}
 .req-info small{color:var(--muted);font-size:10.5px;font-weight:600}
 .req-actions{display:inline-flex;align-items:center;gap:6px;flex:none}
 .req-btn{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease),transform .15s var(--ease)}
@@ -883,11 +891,32 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 /* ============================================================
    Hero rotating word + flush period dot
    ============================================================ */
-.rotator{position:relative;display:inline-block;vertical-align:baseline;overflow:hidden;line-height:inherit;padding:0;margin:0}
-.rotator-word{display:inline-block;line-height:inherit;padding:0 .04em;margin:0 -.04em;background:linear-gradient(90deg,#FF3B5C,#FF7A8A);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:inherit;transition:transform .5s var(--ease),opacity .5s var(--ease);will-change:transform,opacity}
-.rotator-word.rot-out{transform:translateY(-100%);opacity:0}
-.rotator-word.rot-in{transform:translateY(100%);opacity:0}
-.rotator-dot{display:inline-block;margin-left:-1px;color:inherit;font-weight:inherit;line-height:inherit}
+/* Keep the rotating word, its gradient fill, and the trailing period dot
+   locked on the exact same baseline as "your entire". No overflow clipping,
+   no height tricks: vertical-align:baseline + line-height:inherit with zero
+   padding/margin means the baseline passes straight through every piece.
+   Resting state is transform:translateY(0) so the word never settles above
+   its baseline after a swap. */
+.rotator{display:inline-block;vertical-align:baseline;line-height:inherit;padding:0;margin:0;position:relative}
+.rotator-word{
+  display:inline-block;
+  vertical-align:baseline;
+  line-height:inherit;
+  padding:0;margin:0;
+  transform:translateY(0);
+  background:linear-gradient(90deg,#FF3B5C,#FF7A8A);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;font-weight:inherit;
+  transition:transform .42s var(--ease),opacity .32s var(--ease);
+  will-change:transform,opacity;
+}
+.rotator-word.rot-out{transform:translateY(-40%);opacity:0}
+.rotator-word.rot-in{transform:translateY(40%);opacity:0}
+.rotator-dot{display:inline-block;vertical-align:baseline;line-height:inherit;padding:0;margin:0;color:inherit;font-weight:inherit}
+@media(prefers-reduced-motion:reduce){
+  .rotator-word{transition:none;transform:translateY(0)}
+  .rotator-word.rot-out,.rotator-word.rot-in{transform:translateY(0);opacity:1}
+}
 [data-theme="light"] .rotator-word{background-image:linear-gradient(90deg,#CC0000,#E60016)}
 @media(prefers-reduced-motion:reduce){.rotator-word{transition:none}.rotator-word.rot-out,.rotator-word.rot-in{transform:none;opacity:1}}
 
@@ -984,19 +1013,20 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .donut-bg{stroke:rgba(255,255,255,.08)}
 [data-theme="light"] .donut-bg{stroke:#E2E8F0}
 .donut-ring{transform-box:fill-box;transform-origin:center}
+/* Arcs render from the dasharray/dashoffset set directly in the SVG markup,
+   so the donut is never blank, even if the scroll animation never runs or
+   reduced-motion suppresses it. The transition only applies when common.js
+   runs a draw-in animation. No transform animations on segments ever. */
 .donut-seg{
   stroke-linecap:butt;
-  stroke-dasharray:100;
-  stroke-dashoffset:100;
-  stroke-opacity:0;
+  stroke-opacity:1;
   transform-box:fill-box;
   transform-origin:center;
   transform:none;
-  transition:stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1),stroke-opacity .55s ease;
+  transition:stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1);
 }
-.donut.animate .donut-seg{stroke-opacity:1}
 @media(prefers-reduced-motion:reduce){
-  .donut-seg{transition:none;stroke-opacity:1}
+  .donut-seg{transition:none}
 }
 
 /* Floating badges gentle levitation already uses @keyframes float.
