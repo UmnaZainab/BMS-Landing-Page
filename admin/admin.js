@@ -46,7 +46,7 @@
   function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
 
   function formatDate(iso) {
-    if (!iso) return '—';
+    if (!iso) return 'Not available';
     try {
       const d = new Date(iso);
       if (isNaN(d.getTime())) return iso;

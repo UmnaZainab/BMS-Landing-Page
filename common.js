@@ -41,7 +41,7 @@
         <div class="foot-grid">
           <div class="foot-brand">
             <a class="brand" href="#home">${logoMark}<span><b>NExBMS</b><small>Nexum Global Solutions</small></span></a>
-            <p>Unified people, operations and delivery management for growing teams — built by Nexum Global Solutions.</p>
+            <p>Unified people, operations and delivery management for growing teams, built by Nexum Global Solutions.</p>
             <span class="powered-by">Powered by <a href="https://nexumglobal.solutions/" target="_blank" rel="noopener noreferrer"><strong>Nexum Global Solutions</strong></a></span>
           </div>
           <div class="foot-col">
@@ -186,21 +186,13 @@
   const flip = document.getElementById('flipWord');
   if (flip) {
     const words = ['company', 'business', 'workforce'];
-    const sizer = document.createElement('span');
-    sizer.setAttribute('aria-hidden', 'true');
-    sizer.style.cssText = 'position:absolute;left:-9999px;top:0;white-space:nowrap;font:inherit;letter-spacing:inherit';
-    flip.appendChild(sizer);
-    let maxW = 0;
-    words.forEach(w => { sizer.textContent = w; maxW = Math.max(maxW, sizer.offsetWidth); });
-    flip.removeChild(sizer);
-    if (maxW) flip.style.minWidth = Math.ceil(maxW) + 'px';
     let fi = 0;
     setInterval(() => {
       fi = (fi + 1) % words.length;
-      if (reduce) { flip.textContent = words[fi]; return; }
+      if (reduce) { flip.firstChild.nodeValue = words[fi]; return; }
       flip.classList.add('flip-out');
       setTimeout(() => {
-        flip.textContent = words[fi];
+        flip.firstChild.nodeValue = words[fi];
         flip.classList.remove('flip-out');
         flip.classList.add('flip-in');
         requestAnimationFrame(() => requestAnimationFrame(() => flip.classList.remove('flip-in')));

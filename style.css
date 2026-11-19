@@ -173,14 +173,16 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
   margin:22px 0 18px;font-size:clamp(42px,5.4vw,66px);line-height:1.05;letter-spacing:-.025em;font-weight:800;
   animation:heroRise .9s var(--ease) .08s both;
 }
-.hero-copy h1 .flip{display:inline-block;min-width:0;transition:transform .35s var(--ease),opacity .35s var(--ease)}
+.hero-copy h1 .flip{display:inline-block;transition:transform .35s var(--ease),opacity .35s var(--ease)}
+.hero-copy h1 .flip-dot{color:#fff}
 .hero-copy h1 .flip.flip-out{opacity:0;transform:translateY(-18px)}
 .hero-copy h1 .flip.flip-in{opacity:0;transform:translateY(18px)}
 .hero-copy>p{max-width:560px;color:var(--muted);font-size:17px;line-height:1.75;margin:0 0 30px;animation:heroRise .9s var(--ease) .18s both}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;animation:heroRise .9s var(--ease) .28s both}
 .trust{display:flex;flex-wrap:wrap;gap:18px 26px;color:var(--muted);font-size:12px;font-weight:700;animation:heroRise .9s var(--ease) .38s both}
-.trust span{display:inline-flex;align-items:center;gap:8px}
-.trust span::before{content:"";width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--primary) 22%,transparent);border:1px solid color-mix(in srgb,var(--primary) 55%,transparent)}
+.trust>span{display:inline-flex;align-items:center;gap:8px}
+.trust-icon{display:inline-grid;place-items:center;flex:none;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--primary) 22%,transparent);border:1px solid color-mix(in srgb,var(--primary) 55%,transparent);color:var(--primary-2)}
+.trust-icon svg{width:12px;height:12px}
 
 /* Hero live preview card */
 .hero-preview{position:relative;animation:heroRise 1s var(--ease) .3s both}
@@ -301,7 +303,7 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
   background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
   background-size:52px 52px;mask-image:radial-gradient(1200px 600px at 50% 50%,#000,transparent 80%);
 }
-.process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.process-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .process-card{
   position:relative;padding:28px;border-radius:20px;
   background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
@@ -326,12 +328,6 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .process-card p{margin:0;color:#B0BCCD;font-size:13.5px;line-height:1.7}
 
 /* ---------- Pricing section ---------- */
-.pricing-note{
-  display:inline-block;margin-top:14px;padding:9px 14px;border-radius:999px;
-  background:color-mix(in srgb,var(--warn) 14%,transparent);
-  border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);
-  color:#FCD34D;font-size:11px;font-weight:700;line-height:1.5;
-}
 .pricing .suite-stage{margin-top:36px}
 .mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .mod-card{
@@ -714,7 +710,6 @@ footer{position:relative;margin-top:60px;background:var(--bg-2);border-top:1px s
 [data-theme="light"] .mod-tag.impact{background:color-mix(in srgb,#22C55E 18%,transparent);color:#166534;border-color:color-mix(in srgb,#22C55E 44%,transparent)}
 [data-theme="light"] .cart-bar{background:#fff;border-color:#CBD5E1;box-shadow:0 20px 55px rgba(11,22,38,.12)}
 [data-theme="light"] .cart-info span:last-child{color:#0B1526}
-[data-theme="light"] .pricing-note{color:#92400E;background:color-mix(in srgb,#F59E0B 20%,transparent);border-color:color-mix(in srgb,#F59E0B 48%,transparent)}
 
 /* Demo modal selected-plan pill */
 [data-theme="light"] .demo-sel{color:#8E0C1B;background:color-mix(in srgb,var(--primary) 8%,transparent);border-color:color-mix(in srgb,var(--primary) 32%,transparent)}

@@ -60,7 +60,7 @@
         try { detail = (await res.json()).detail || ''; } catch { /* non-JSON */ }
         throw new Error(detail || `Server responded with ${res.status}.`);
       }
-      showStatus('ok', 'Thanks! Your message was sent — we’ll be in touch within one business day.');
+      showStatus('ok', 'Thanks! Your message was sent. We’ll be in touch within one business day.');
       form.reset();
       fields().forEach(f => { f.setAttribute('aria-invalid', 'false'); const er = f.parentElement.querySelector('.error'); if (er) er.textContent = ''; });
     } catch (err) {

@@ -129,7 +129,7 @@
     // it — the function requires full_name, email, phone (>=6 digits) and a
     // 10+ char message. We synthesise a company-based name and a message that
     // records the exact walkthrough request details.
-    const message = `Demo request — Company: ${company} · Team size: ${team} · Preferred date: ${date} · Time slot: ${slot}.`;
+    const message = `Demo request. Company: ${company} · Team size: ${team} · Preferred date: ${date} · Time slot: ${slot}.`;
     const payload = {
       full_name: company ? `${company} (Demo Request)` : 'Demo Request',
       email,
