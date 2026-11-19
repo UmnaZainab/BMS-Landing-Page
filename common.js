@@ -301,37 +301,40 @@
     }
   } catch (e) { /* non-critical */ }
 
-  /* ---------- Donut SVG segments: animate stroke-dashoffset on view ---------- */
+  /* ---------- Donut SVG segments: layered stroke-dashoffset reveal ----------
+     Each donut is three stacked full circles with pathLength=100 and a single
+     dash of length 100. The group is rotated -90 so the dash starts at 12
+     o'clock. We animate stroke-dashoffset from 100 (hidden) to (100 - end%),
+     where end% is the cumulative percentage this layer covers. Painting order
+     is deepest-first (slate, then pink, then red), so the layers stack
+     cleanly into the ring without any per-segment transform. */
   try {
     const donuts = document.querySelectorAll('.donut');
     if (donuts.length) {
-      const R = 42;
-      const CIRC = 2 * Math.PI * R;
       donuts.forEach(d => {
         const segs = d.querySelectorAll('.donut-seg');
-        const bg = d.querySelector('.donut-bg');
-        if (bg) bg.setAttribute('stroke-dasharray', CIRC.toFixed(2));
         segs.forEach(s => {
-          const pct = Math.max(0, Math.min(100, parseFloat(s.dataset.pct) || 0));
-          const start = Math.max(0, Math.min(100, parseFloat(s.dataset.start) || 0));
-          const segLen = CIRC * (pct / 100);
-          s.setAttribute('stroke-dasharray', `${segLen.toFixed(2)} ${(CIRC - segLen + 1).toFixed(2)}`);
-          s.style.strokeDashoffset = segLen.toFixed(2);
-          const rot = -90 + (start / 100) * 360;
-          s.setAttribute('transform', `rotate(${rot.toFixed(2)} 50 50)`);
+          const end = Math.max(0, Math.min(100, parseFloat(s.dataset.end) || 0));
+          s.setAttribute('stroke-dasharray', '100');
+          s.setAttribute('stroke-dashoffset', '100');
+          s.dataset.target = String(100 - end);
         });
       });
+      const reveal = d => {
+        d.classList.add('animate');
+        const segs = d.querySelectorAll('.donut-seg');
+        segs.forEach((s, i) => {
+          setTimeout(() => { s.style.strokeDashoffset = s.dataset.target; }, 160 + i * 220);
+        });
+      };
       const donutIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           donutIO.unobserve(e.target);
-          const segs = e.target.querySelectorAll('.donut-seg');
-          segs.forEach((s, i) => {
-            setTimeout(() => { s.style.strokeDashoffset = '0'; }, 120 + i * 180);
-          });
+          reveal(e.target);
         });
       }, { threshold: .35 }) : null;
-      donuts.forEach(d => donutIO ? donutIO.observe(d) : d.querySelectorAll('.donut-seg').forEach(s => s.style.strokeDashoffset = '0'));
+      donuts.forEach(d => donutIO ? donutIO.observe(d) : reveal(d));
     }
   } catch (e) { /* non-critical */ }
 

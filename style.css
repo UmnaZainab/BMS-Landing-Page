@@ -218,8 +218,8 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .hd-card{padding:14px;border:1px solid var(--line);border-radius:13px;background:rgba(0,0,0,.28)}
 .hd-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:8px}
 .hd-card-h b{font-weight:800}
-.hd-chart{display:flex;align-items:flex-end;gap:5px;height:84px}
-.hd-chart i{flex:1;max-width:14px;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#FF5A6E,#8E0C1B);transform-origin:bottom;animation:chartRise .9s cubic-bezier(.2,.75,.3,1) both}
+.hd-chart{display:flex;align-items:flex-end;gap:8px;height:84px;width:100%}
+.hd-chart i{flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#FF5A6E,#8E0C1B);transform-origin:bottom;animation:chartRise .9s cubic-bezier(.2,.75,.3,1) both}
 .hd-chart i:nth-child(odd){animation-delay:.08s}
 @keyframes chartRise{from{transform:scaleY(.1);opacity:.4}to{transform:scaleY(1);opacity:1}}
 
@@ -930,12 +930,26 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .side-item:hover{color:var(--ink);background:rgba(255,255,255,.04)}
 [data-theme="light"] .side-item:hover{background:rgba(11,22,38,.04);color:#0B1526}
 
-.donut{position:relative;overflow:visible}
+.donut{position:relative;overflow:hidden;border-radius:50%}
 .donut.department,.donut.leave{background:transparent}
-.donut-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.donut-svg{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
 .donut-bg{stroke:rgba(255,255,255,.08)}
 [data-theme="light"] .donut-bg{stroke:#E2E8F0}
-.donut-seg{stroke-linecap:butt;transform-origin:50% 50%;transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)}
+.donut-ring{transform-box:fill-box;transform-origin:center}
+.donut-seg{
+  stroke-linecap:butt;
+  stroke-dasharray:100;
+  stroke-dashoffset:100;
+  stroke-opacity:0;
+  transform-box:fill-box;
+  transform-origin:center;
+  transform:none;
+  transition:stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1),stroke-opacity .55s ease;
+}
+.donut.animate .donut-seg{stroke-opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .donut-seg{transition:none;stroke-opacity:1}
+}
 
 /* Floating badges gentle levitation already uses @keyframes float.
    Make them more cohesive. */
