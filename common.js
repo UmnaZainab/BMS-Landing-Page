@@ -179,24 +179,6 @@
   }), { threshold: .6 }) : null;
   $$('[data-to]').forEach(el => countIO ? countIO.observe(el) : el.textContent = (+el.dataset.to).toFixed(+(el.dataset.dec || 0)));
 
-  /* ---------- Hero flip word ---------- */
-  const flip = document.getElementById('flipWord');
-  if (flip) {
-    const words = ['company', 'business', 'workforce'];
-    let fi = 0;
-    setInterval(() => {
-      fi = (fi + 1) % words.length;
-      if (reduce) { flip.firstChild.nodeValue = words[fi]; return; }
-      flip.classList.add('flip-out');
-      setTimeout(() => {
-        flip.firstChild.nodeValue = words[fi];
-        flip.classList.remove('flip-out');
-        flip.classList.add('flip-in');
-        requestAnimationFrame(() => requestAnimationFrame(() => flip.classList.remove('flip-in')));
-      }, 360);
-    }, 2500);
-  }
-
   /* ---------- Hero sidebar walkthrough ---------- */
   try {
     const dash = document.querySelector('.hero-card');
