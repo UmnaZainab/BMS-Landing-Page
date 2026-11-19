@@ -361,39 +361,25 @@
     }
   } catch (e) { /* non-critical */ }
 
-  /* ---------- Donut SVG segments: progressive draw-in on scroll ----------
-     The SVG markup carries the final stroke-dasharray and stroke-dashoffset
-     values for each segment, so the colored arcs are visible from first paint
-     and stay visible even if this script never runs or reduced motion is
-     active. If the donut is NOT in view at script start, we park it at
-     dashoffset:100 (hidden) and let the CSS transition draw each segment in
-     when the IntersectionObserver fires. Donuts already in the viewport on
-     load keep their markup values untouched. */
+  /* ---------- Donut SVG segments: entrance fade on scroll ----------
+     The colored arcs are fully drawn by the stroke-dasharray / stroke-dashoffset
+     values in the SVG markup, so they are always visible, including on first
+     paint, with no JS, and with reduced motion. All this does is add
+     .is-drawn when the donut scrolls into view, which lets a (tiny) CSS
+     opacity transition play. We never touch stroke color or dasharray. */
   try {
     const donuts = document.querySelectorAll('.donut');
     if (donuts.length && !reduce && 'IntersectionObserver' in window) {
-      const inView = el => {
-        const r = el.getBoundingClientRect();
-        return r.top < (window.innerHeight || document.documentElement.clientHeight) && r.bottom > 0;
-      };
-      const park = d => d.querySelectorAll('.donut-seg').forEach(s => {
-        const end = Math.max(0, Math.min(100, parseFloat(s.dataset.end) || 0));
-        s.dataset.target = String(100 - end);
-        s.setAttribute('stroke-dashoffset', '100');
-      });
-      const draw = d => d.querySelectorAll('.donut-seg').forEach((s, i) => {
-        const target = s.dataset.target != null ? s.dataset.target : String(100 - (parseFloat(s.dataset.end) || 0));
-        setTimeout(() => s.setAttribute('stroke-dashoffset', target), 140 + i * 200);
-      });
-      donuts.forEach(d => { if (!inView(d)) park(d); });
       const donutIO = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           donutIO.unobserve(e.target);
-          draw(e.target);
+          e.target.classList.add('is-drawn');
         });
-      }, { threshold: .35 });
+      }, { threshold: .25 });
       donuts.forEach(d => donutIO.observe(d));
+    } else if (donuts.length) {
+      donuts.forEach(d => d.classList.add('is-drawn'));
     }
   } catch (e) { /* non-critical */ }
 

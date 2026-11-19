@@ -221,11 +221,19 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .hd-card{padding:14px;border:1px solid var(--line);border-radius:13px;background:rgba(0,0,0,.28)}
 .hd-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:8px}
 .hd-card-h b{font-weight:800}
-.hd-chart-wrap{position:relative;width:100%;height:100px}
+.hd-card-trends{display:flex;flex-direction:column;justify-content:space-between;height:100%}
+.hd-chart-wrap{position:relative;width:100%;flex:1;min-height:145px;display:flex}
 .hd-chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;z-index:0}
 .hd-chart-grid span{display:block;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.08) 80%,transparent)}
 [data-theme="light"] .hd-chart-grid span{background:linear-gradient(90deg,transparent,rgba(11,22,38,.08) 20%,rgba(11,22,38,.08) 80%,transparent)}
-.hd-chart{position:relative;display:flex;align-items:flex-end;gap:10px;height:100%;width:100%;z-index:1}
+.hd-chart{position:relative;display:flex;align-items:flex-end;gap:10px;height:100%;width:100%;z-index:1;flex:1}
+.hd-chart-labels{display:flex;gap:10px;margin-top:10px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.04em}
+.hd-chart-labels span{flex:1;text-align:center;min-width:0}
+.hd-card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600}
+.hd-card-foot b{color:var(--ink);font-weight:800}
+[data-theme="light"] .hd-card-foot{border-top-color:#CBD5E1;color:#475569}
+[data-theme="light"] .hd-card-foot b{color:#0B1526}
+[data-theme="light"] .hd-chart-labels{color:#475569}
 .hd-chart i{position:relative;flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#FF6B81 0%,#E60016 70%,#8E0C1B 100%);transform-origin:bottom;animation:chartRise .9s cubic-bezier(.2,.75,.3,1) both;cursor:default;transition:filter .25s var(--ease),box-shadow .25s var(--ease),height .6s cubic-bezier(.22,1,.36,1)}
 .hd-chart i.peak{box-shadow:0 0 14px rgba(230,0,22,.55),0 -4px 12px rgba(255,107,129,.35)}
 .hd-chart i:hover{filter:brightness(1.12);box-shadow:0 0 14px rgba(230,0,22,.45)}
@@ -1010,21 +1018,19 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .donut{position:relative;overflow:hidden;border-radius:50%}
 .donut.department,.donut.leave{background:transparent}
 .donut-svg{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
-.donut-bg{stroke:rgba(255,255,255,.08)}
-[data-theme="light"] .donut-bg{stroke:#E2E8F0}
+/* Track + segment strokes are set directly in the SVG markup; CSS only
+   provides the safety net (transform-box + transform-origin so no stray CSS
+   transform can shift the arc) and a gentle opacity fade-in on scroll. No
+   rule here overrides stroke, dasharray, or dashoffset. */
 .donut-ring{transform-box:fill-box;transform-origin:center}
-/* Arcs render from the dasharray/dashoffset set directly in the SVG markup,
-   so the donut is never blank, even if the scroll animation never runs or
-   reduced-motion suppresses it. The transition only applies when common.js
-   runs a draw-in animation. No transform animations on segments ever. */
 .donut-seg{
-  stroke-linecap:butt;
   stroke-opacity:1;
   transform-box:fill-box;
   transform-origin:center;
   transform:none;
-  transition:stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1);
+  transition:stroke-opacity .6s ease;
 }
+.donut:not(.is-drawn) .donut-seg{stroke-opacity:1}
 @media(prefers-reduced-motion:reduce){
   .donut-seg{transition:none}
 }
