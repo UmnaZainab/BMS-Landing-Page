@@ -245,10 +245,7 @@
       }
     }
 
-    /* Chart range tabs: This Week / Month.
-       Switching the range updates the bar heights, replays the rise, flags the
-       peak bar for the glow, refreshes each bar's tooltip value, and
-       re-animates the four KPI numbers to the range's target values. */
+    /* Chart range tabs update bar heights, tooltips, summaries and KPI values. */
     const segButtons = dash ? [...dash.querySelectorAll('.hd-seg button[data-range]')] : [];
     const chartBars = dash ? [...dash.querySelectorAll('.hd-chart i')] : [];
     const kpiNumbers = dash ? [...dash.querySelectorAll('.hd-kpi [data-to]')] : [];
@@ -278,32 +275,30 @@
       });
       chartBars.forEach((bar, i) => bar.classList.toggle('peak', i === peakIdx));
     };
-    const refreshTooltips = range => chartBars.forEach(bar => {
+    const plotHeight = value => Math.max(5, Math.min(100, (value - 80) * 5)) + '%';
+    const refreshTooltips = range => chartBars.forEach((bar, i) => {
       const v = bar.dataset[range];
       if (!v) return;
       bar.setAttribute('data-value', v + '%');
+      bar.setAttribute('aria-label', `W${i + 1} attendance ${v} percent`);
       const em = bar.querySelector('em');
       if (em) em.textContent = v + '%';
     });
-    /* Trend line + peak dot drawn over the bars via SVG. Because the SVG uses
-       preserveAspectRatio="none" with a 0..100 viewBox, we can map each data
-       point onto its bar center with (i + 0.5) * (100 / n). */
-    const trendLine = dash ? dash.querySelector('.hd-trend-line') : null;
-    const trendPeak = dash ? dash.querySelector('.hd-trend-peak') : null;
-    const updateTrend = range => {
-      if (!trendLine || !chartBars.length) return;
-      const n = chartBars.length;
-      const vals = chartBars.map(b => +(b.dataset[range] || 0));
-      const pts = vals.map((v, i) => `${((i + 0.5) * (100 / n)).toFixed(2)},${(100 - v).toFixed(2)}`).join(' ');
-      trendLine.setAttribute('points', pts);
-      let peakIdx = 0, peakVal = -1;
-      vals.forEach((v, i) => { if (v > peakVal) { peakVal = v; peakIdx = i; } });
-      if (trendPeak) {
-        trendPeak.setAttribute('cx', ((peakIdx + 0.5) * (100 / n)).toFixed(2));
-        trendPeak.setAttribute('cy', (100 - peakVal).toFixed(2));
-      }
+    const updateSummary = range => {
+      const values = chartBars.map(bar => +(bar.dataset[range] || 0));
+      if (!values.length) return;
+      const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+      const peak = Math.max(...values);
+      const avgEl = dash.querySelector('[data-chart-avg]');
+      const peakEl = dash.querySelector('[data-chart-peak]');
+      const peakWeekEl = dash.querySelector('[data-chart-peak-week]');
+      const onTimeEl = dash.querySelector('[data-chart-ontime]');
+      if (avgEl) avgEl.textContent = avg.toFixed(1) + '%';
+      if (peakEl) peakEl.textContent = peak.toFixed(1) + '%';
+      if (peakWeekEl) peakWeekEl.textContent = `(W${values.indexOf(peak) + 1})`;
+      if (onTimeEl) onTimeEl.textContent = range === 'week' ? '96.1%' : '94.7%';
     };
-    if (chartBars.length) { flagPeak('week'); refreshTooltips('week'); updateTrend('week'); }
+    if (chartBars.length) { flagPeak('week'); refreshTooltips('week'); updateSummary('week'); }
     if (segButtons.length && chartBars.length) {
       const setRange = range => {
         segButtons.forEach(b => {
@@ -312,13 +307,12 @@
           b.setAttribute('aria-selected', String(on));
         });
         chartBars.forEach(bar => {
-          const target = bar.dataset[range] || bar.style.height.replace('%', '');
-          bar.style.height = target + '%';
+          const target = +(bar.dataset[range] || 80);
+          bar.style.height = plotHeight(target);
         });
         refreshTooltips(range);
         flagPeak(range);
-        updateTrend(range);
-        replayBars();
+        updateSummary(range);
         const targets = kpiTargets[range] || kpiTargets.week;
         kpiNumbers.forEach((el, i) => animateNumber(el, targets[i] != null ? targets[i] : +(el.dataset.to)));
       };

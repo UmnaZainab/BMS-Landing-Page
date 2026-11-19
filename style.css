@@ -222,39 +222,33 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .hd-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:8px}
 .hd-card-h b{font-weight:800}
 .hd-card-trends{display:flex;flex-direction:column;justify-content:space-between;height:100%}
-.hd-chart-wrap{position:relative;width:100%;flex:1;min-height:145px;display:flex;align-items:stretch}
-/* Dashed reference lines at 100%, 95%, 90% of the plot area. */
+.hd-chart-wrap{position:relative;width:100%;flex:1;min-height:150px;display:flex;align-items:stretch;margin-top:10px}
+/* Evenly spaced reference lines across the displayed 80% to 100% range. */
 .hd-chart-grid{position:absolute;inset:0;pointer-events:none;z-index:0}
 .hd-grid-line{position:absolute;left:0;right:0;height:0;border-top:1px dashed rgba(148,163,184,.26)}
 .hd-grid-line[data-pct="100"]{top:0}
-.hd-grid-line[data-pct="95"]{top:5%}
-.hd-grid-line[data-pct="90"]{top:10%}
-.hd-grid-line::after{content:attr(data-pct) "%";position:absolute;right:0;top:-6px;padding:1px 4px;background:transparent;color:var(--muted);font-size:8.5px;font-weight:700;letter-spacing:.04em;opacity:.7}
+.hd-grid-line[data-pct="90"]{top:50%}
+.hd-grid-line[data-pct="80"]{top:100%}
+.hd-grid-line::after{content:attr(data-pct) "%";position:absolute;right:0;top:-10px;padding:1px 3px;background:#0D1626;color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.02em}
+.hd-grid-line[data-pct="80"]::after{top:-18px}
 [data-theme="light"] .hd-grid-line{border-top-color:rgba(100,116,139,.35)}
-[data-theme="light"] .hd-grid-line::after{color:#64748B}
-.hd-chart{position:relative;display:flex;align-items:flex-end;gap:10px;height:100%;width:100%;z-index:1;flex:1}
-/* Overlay SVG trend line + peak dot. preserveAspectRatio=none means the
-   viewBox (0 0 100 100) stretches to the wrap's actual pixel size, so we can
-   map percentage-based coordinates directly. */
-.hd-trend{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
-.hd-trend-line{filter:drop-shadow(0 0 4px rgba(255,107,129,.55));opacity:.95}
-.hd-trend-peak{filter:drop-shadow(0 0 5px rgba(230,0,22,.75));transform-box:view-box;transform-origin:center;animation:trendPeakPulse 1.8s ease-in-out infinite}
-@keyframes trendPeakPulse{0%,100%{opacity:1}50%{opacity:.6}}
-@media(prefers-reduced-motion:reduce){.hd-trend-peak{animation:none}}
-.hd-chart-labels{display:flex;gap:10px;margin-top:10px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.04em}
-.hd-chart-labels span{flex:1;text-align:center;min-width:0}
+[data-theme="light"] .hd-grid-line::after{color:#475569;background:#fff}
+.hd-chart{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));align-items:end;gap:7px;height:100%;width:100%;padding-right:36px;z-index:1;flex:1}
+.hd-chart-labels{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:7px;padding-right:36px;margin-top:10px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.02em}
+.hd-chart-labels span{text-align:center;min-width:0}
 .hd-card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2);color:var(--muted);font-size:11px;font-weight:600;flex-wrap:wrap}
 .hd-card-foot>span{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap}
 .hd-card-foot b{color:var(--ink);font-weight:800}
 [data-theme="light"] .hd-card-foot{border-top-color:#CBD5E1;color:#475569}
 [data-theme="light"] .hd-card-foot b{color:#0B1526}
 [data-theme="light"] .hd-chart-labels{color:#475569}
-.hd-chart i{position:relative;flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#FF6B81 0%,#E60016 70%,#8E0C1B 100%);transform-origin:bottom;animation:chartRise .9s cubic-bezier(.2,.75,.3,1) both;cursor:default;transition:filter .25s var(--ease),box-shadow .25s var(--ease),height .6s cubic-bezier(.22,1,.36,1)}
-.hd-chart i.peak{box-shadow:0 0 14px rgba(230,0,22,.55),0 -4px 12px rgba(255,107,129,.35)}
-.hd-chart i:hover{filter:brightness(1.12);box-shadow:0 0 14px rgba(230,0,22,.45)}
+.hd-chart i{position:relative;display:block;justify-self:center;width:100%;max-width:22px;border-radius:7px 7px 4px 4px;background:linear-gradient(180deg,#FF3B5C 0%,#CC0000 100%);transform-origin:bottom;animation:chartRise .9s cubic-bezier(.2,.75,.3,1) both;cursor:default;transition:filter .25s var(--ease),box-shadow .25s var(--ease),height .7s cubic-bezier(.22,1,.36,1)}
+.hd-chart i.peak{box-shadow:0 3px 10px rgba(204,0,0,.26)}
+.hd-chart i:hover,.hd-chart i:focus-visible{filter:brightness(1.1);box-shadow:0 4px 12px rgba(204,0,0,.3)}
+.hd-chart i:focus-visible{outline:2px solid #FF7180;outline-offset:2px}
 .hd-chart i em{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);padding:3px 8px;border-radius:6px;background:#0B1322;color:#fff;font-size:10px;font-weight:700;font-style:normal;letter-spacing:.02em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);box-shadow:0 6px 16px rgba(0,0,0,.4);z-index:5;border:1px solid rgba(255,255,255,.1)}
 .hd-chart i em::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid #0B1322}
-.hd-chart i:hover em,.hd-chart i:focus em{opacity:1;transform:translateX(-50%) translateY(0)}
+.hd-chart i:hover em,.hd-chart i:focus-visible em{opacity:1;transform:translateX(-50%) translateY(0)}
 .hd-chart i:nth-child(odd){animation-delay:.08s}
 [data-theme="light"] .hd-chart i em{background:#fff;color:#0B1526;border-color:#CBD5E1;box-shadow:0 6px 16px rgba(11,22,38,.18)}
 [data-theme="light"] .hd-chart i em::after{border-top-color:#fff}
@@ -797,7 +791,7 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .hd-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .hd-card{min-height:148px}
 .hd-card-h span{color:var(--muted);font-size:10px}
-.hd-chart{height:86px}
+.hd-card-trends .hd-chart{height:100%}
 .donut-row{display:flex;align-items:center;gap:20px;min-height:112px}
 /* Rock-solid conic-gradient rings with a themed inner cutout. Guaranteed to
    render vibrantly in every browser, in both themes, without stroke math. */
