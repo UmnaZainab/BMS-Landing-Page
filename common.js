@@ -1,7 +1,7 @@
 /* Injected across every page: builds the sticky glass header + dark navy footer
    for the single-page NExBMS site, then wires theme, mobile menu, smooth scroll,
    active-section highlighting, scroll reveals, count-up numbers, back-to-top,
-   floating quick actions and the Calendly booking modal. */
+   floating quick actions and direct Calendly booking links. */
 (function () {
   const page = document.body.dataset.page || 'home';
   const logoMark = `<span class="logo" aria-hidden="true">
@@ -29,7 +29,7 @@
       <div class="nav-actions">
         <button class="theme" id="theme" aria-label="Switch to light mode" title="Change theme">☀</button>
         <a class="btn btn-ghost nav-cta-hide" href="#pricing">Get Pricing</a>
-        <a class="btn btn-primary" href="#" data-open-demo>Book a Demo</a>
+        <a class="btn btn-primary" href="https://calendly.com/nexumglobalsolutions" target="_blank" rel="noopener noreferrer">Book a Demo</a>
         <button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button>
       </div>
     </nav>`;
@@ -49,7 +49,7 @@
             <a href="#features">Features</a>
             <a href="#process">Process</a>
             <a href="#pricing">Pricing</a>
-            <a href="#" data-open-demo>Book a Demo</a>
+            <a href="https://calendly.com/nexumglobalsolutions" target="_blank" rel="noopener noreferrer">Book a Demo</a>
           </div>
           <div class="foot-col">
             <h4>Company</h4>
@@ -68,7 +68,7 @@
             <h4>Let's Connect</h4>
             <div class="foot-social-links">
               <a class="soc" data-net="email" href="mailto:info@nexumglobal.solutions" title="Email" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
-              <a class="soc" data-net="whatsapp" href="https://wa.me/923278223333" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 2.3 18L1 23l5.2-1.3A11.9 11.9 0 1 0 20.5 3.5Zm-8.5 18a9.5 9.5 0 0 1-4.9-1.4l-.3-.2-3.1.8.8-3-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5.4-7.1c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.7 7.7 0 0 1-3.8-3.3c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7c0 1.6 1.2 3.2 1.4 3.4s2.3 3.5 5.6 4.9a19 19 0 0 0 1.9.7 4.5 4.5 0 0 0 2 .1 3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3Z"/></svg></a>
+              <a class="soc" data-net="whatsapp" href="https://wa.me/923278223333" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.7 20l3.8-1A8.5 8.5 0 1 0 12 3.5Z"/><path d="M8.5 8.5c.2-.3.5-.4.8-.3l1 .5c.3.2.4.5.3.8l-.5 1c.6 1.3 1.7 2.4 3 3l1-.5c.3-.1.6 0 .8.3l.5 1c.1.3 0 .6-.3.8-.6.4-1.3.6-2 .4a8.2 8.2 0 0 1-5-5c-.2-.7 0-1.4.4-2Z"/></svg></a>
               <a class="soc" data-net="linkedin" href="https://www.linkedin.com/company/nexum-global-solutions/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.82-2.05 3.75-2.05 4 0 4.4 2.63 4.4 6.05V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V21H9z"/></svg></a>
               <a class="soc" data-net="facebook" href="https://www.facebook.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.9 3.77-3.9 1.1 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></a>
               <a class="soc" data-net="instagram" href="https://www.instagram.com/nexumglobalsolutions/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
@@ -132,8 +132,6 @@
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    // Demo-modal triggers are handled by their own listener below.
-    if (a.closest('[data-open-demo]')) return;
     const id = a.getAttribute('href');
     if (id.length <= 1) return;
     const target = document.querySelector(id);
@@ -248,54 +246,6 @@
     window.addEventListener('scroll', upd, { passive: true });
     window.addEventListener('resize', upd, { passive: true });
   }
-
-  /* ---------- Demo booking modal controller ---------- */
-  const CALENDLY_URL = 'https://calendly.com/nexumglobal-solutions';
-  window.__NEXUM_CALENDLY_URL = CALENDLY_URL;
-
-  const demoModal = document.getElementById('demoModal');
-  let demoLastFocus = null;
-  function openDemoModal() {
-    if (!demoModal) { window.open(CALENDLY_URL, '_blank', 'noopener'); return; }
-    demoLastFocus = document.activeElement;
-    demoModal.classList.add('open');
-    demoModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    // Reset to form view whenever the modal is reopened.
-    const steps = demoModal.querySelectorAll('.demo-modal-step');
-    steps.forEach(s => s.hidden = s.dataset.step !== 'form');
-    const firstField = demoModal.querySelector('input,select,textarea,button');
-    if (firstField) firstField.focus();
-  }
-  function closeDemoModal() {
-    if (!demoModal) return;
-    demoModal.classList.remove('open');
-    demoModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    if (demoLastFocus && demoLastFocus.focus) demoLastFocus.focus();
-  }
-  window.openDemoModal = openDemoModal;
-  window.closeDemoModal = closeDemoModal;
-
-  document.addEventListener('click', e => {
-    if (e.target.closest('[data-open-demo]')) { e.preventDefault(); openDemoModal(); return; }
-    if (e.target.closest('[data-demo-close]')) { e.preventDefault(); closeDemoModal(); }
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && demoModal && demoModal.classList.contains('open')) closeDemoModal();
-  });
-
-  /* Auto-open the demo modal when ?demo=1 is in the URL (legacy /demo.html redirect). */
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('demo') === '1') {
-      // Defer to the next tick so demo.js finishes wiring the form first.
-      setTimeout(openDemoModal, 60);
-      // Clean up the query so a refresh doesn't keep re-opening it.
-      const clean = window.location.pathname + window.location.hash;
-      history.replaceState(null, '', clean);
-    }
-  } catch (e) { /* non-critical */ }
 
   /* ---------- Live pricing sync ----------
      Overlays the default HTML prices with whatever is stored in MongoDB via
