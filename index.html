@@ -11,7 +11,7 @@
   <meta property="og:site_name" content="NExBMS">
   <meta property="og:url" content="https://nexbms.com/">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./style.css?v=17">
+  <link rel="stylesheet" href="./style.css?v=18">
 </head>
 <body data-page="home">
 
@@ -105,16 +105,8 @@
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Department Distribution</b><span>248 people</span></div>
                     <div class="donut-row">
-                      <div class="donut department">
-                        <svg class="donut-svg" viewBox="0 0 100 100" aria-hidden="true">
-                          <circle class="donut-bg" cx="50" cy="50" r="42" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="11" pathLength="100"/>
-                          <g class="donut-ring" transform="rotate(-90 50 50)">
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#E60016" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="42 100" stroke-dashoffset="0"/>
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#FF6B81" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="35 100" stroke-dashoffset="-42"/>
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#3B82F6" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="23 100" stroke-dashoffset="-77"/>
-                          </g>
-                        </svg>
-                        <div class="donut-center"><b>248</b><em>Staff</em></div>
+                      <div class="donut department" aria-hidden="true">
+                        <div class="donut-inner"><b>248</b><em>Staff</em></div>
                       </div>
                       <ul class="donut-legend donut-legend-dept">
                         <li><i></i>Operations <b>42%</b></li>
@@ -126,16 +118,8 @@
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Leave Status</b><span>This month</span></div>
                     <div class="donut-row">
-                      <div class="donut leave">
-                        <svg class="donut-svg" viewBox="0 0 100 100" aria-hidden="true">
-                          <circle class="donut-bg" cx="50" cy="50" r="42" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="11" pathLength="100"/>
-                          <g class="donut-ring" transform="rotate(-90 50 50)">
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#E60016" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="76 100" stroke-dashoffset="0"/>
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#FF6B81" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="16 100" stroke-dashoffset="-76"/>
-                            <circle class="donut-seg" cx="50" cy="50" r="42" fill="none" stroke="#64748B" stroke-width="11" stroke-linecap="butt" pathLength="100" stroke-dasharray="8 100" stroke-dashoffset="-92"/>
-                          </g>
-                        </svg>
-                        <div class="donut-center"><b>76%</b><em>Approved</em></div>
+                      <div class="donut leave" aria-hidden="true">
+                        <div class="donut-inner"><b>76%</b><em>Approved</em></div>
                       </div>
                       <ul class="donut-legend donut-legend-leave">
                         <li><i></i>Approved <b>76%</b></li>
@@ -147,7 +131,11 @@
                   <div class="hd-card hd-card-trends">
                     <div class="hd-card-h"><b>Attendance Trends</b><span>12 weeks</span></div>
                     <div class="hd-chart-wrap">
-                      <div class="hd-chart-grid" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                      <div class="hd-chart-grid" aria-hidden="true">
+                        <span class="hd-grid-line" data-pct="100"></span>
+                        <span class="hd-grid-line" data-pct="95"></span>
+                        <span class="hd-grid-line" data-pct="90"></span>
+                      </div>
                       <div class="hd-chart" data-chart="attendance">
                         <i data-week="62" data-month="55" style="height:62%"><em>62%</em></i>
                         <i data-week="74" data-month="68" style="height:74%"><em>74%</em></i>
@@ -162,9 +150,20 @@
                         <i data-week="73" data-month="70" style="height:73%"><em>73%</em></i>
                         <i data-week="90" data-month="86" style="height:90%"><em>90%</em></i>
                       </div>
+                      <svg class="hd-trend" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                          <linearGradient id="trendGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#FFC7CF"/>
+                            <stop offset="50%" stop-color="#FF6B81"/>
+                            <stop offset="100%" stop-color="#E60016"/>
+                          </linearGradient>
+                        </defs>
+                        <polyline class="hd-trend-line" fill="none" stroke="url(#trendGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" points=""/>
+                        <circle class="hd-trend-peak" cx="0" cy="0" r="3.2" fill="#fff" stroke="#E60016" stroke-width="2" vector-effect="non-scaling-stroke"/>
+                      </svg>
                     </div>
                     <div class="hd-chart-labels" aria-hidden="true"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span><span>W11</span><span>W12</span></div>
-                    <div class="hd-card-foot"><span>Avg: <b>94.2%</b></span><span>Peak: <b>98.4%</b> (W8)</span></div>
+                    <div class="hd-card-foot"><span>Avg Attendance: <b>94.2%</b></span><span>Peak: <b>98.4%</b> (W8)</span><span>On Time: <b>96.1%</b></span></div>
                   </div>
                   <div class="hd-card">
                     <div class="hd-card-h"><b>Pending Requests</b><span>Needs review</span></div>
@@ -472,7 +471,7 @@
 
   <script src="./pricing.js?v=202" defer></script>
   <script src="./contact.js?v=200" defer></script>
-  <script src="./common.js?v=17" defer></script>
-  <script src="./motion-effects.js?v=9" defer></script>
+  <script src="./common.js?v=18" defer></script>
+  <script src="./motion-effects.js?v=10" defer></script>
 </body>
 </html>

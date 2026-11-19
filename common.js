@@ -285,7 +285,25 @@
       const em = bar.querySelector('em');
       if (em) em.textContent = v + '%';
     });
-    if (chartBars.length) { flagPeak('week'); refreshTooltips('week'); }
+    /* Trend line + peak dot drawn over the bars via SVG. Because the SVG uses
+       preserveAspectRatio="none" with a 0..100 viewBox, we can map each data
+       point onto its bar center with (i + 0.5) * (100 / n). */
+    const trendLine = dash ? dash.querySelector('.hd-trend-line') : null;
+    const trendPeak = dash ? dash.querySelector('.hd-trend-peak') : null;
+    const updateTrend = range => {
+      if (!trendLine || !chartBars.length) return;
+      const n = chartBars.length;
+      const vals = chartBars.map(b => +(b.dataset[range] || 0));
+      const pts = vals.map((v, i) => `${((i + 0.5) * (100 / n)).toFixed(2)},${(100 - v).toFixed(2)}`).join(' ');
+      trendLine.setAttribute('points', pts);
+      let peakIdx = 0, peakVal = -1;
+      vals.forEach((v, i) => { if (v > peakVal) { peakVal = v; peakIdx = i; } });
+      if (trendPeak) {
+        trendPeak.setAttribute('cx', ((peakIdx + 0.5) * (100 / n)).toFixed(2));
+        trendPeak.setAttribute('cy', (100 - peakVal).toFixed(2));
+      }
+    };
+    if (chartBars.length) { flagPeak('week'); refreshTooltips('week'); updateTrend('week'); }
     if (segButtons.length && chartBars.length) {
       const setRange = range => {
         segButtons.forEach(b => {
@@ -299,6 +317,7 @@
         });
         refreshTooltips(range);
         flagPeak(range);
+        updateTrend(range);
         replayBars();
         const targets = kpiTargets[range] || kpiTargets.week;
         kpiNumbers.forEach((el, i) => animateNumber(el, targets[i] != null ? targets[i] : +(el.dataset.to)));
@@ -361,27 +380,8 @@
     }
   } catch (e) { /* non-critical */ }
 
-  /* ---------- Donut SVG segments: entrance fade on scroll ----------
-     The colored arcs are fully drawn by the stroke-dasharray / stroke-dashoffset
-     values in the SVG markup, so they are always visible, including on first
-     paint, with no JS, and with reduced motion. All this does is add
-     .is-drawn when the donut scrolls into view, which lets a (tiny) CSS
-     opacity transition play. We never touch stroke color or dasharray. */
-  try {
-    const donuts = document.querySelectorAll('.donut');
-    if (donuts.length && !reduce && 'IntersectionObserver' in window) {
-      const donutIO = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          donutIO.unobserve(e.target);
-          e.target.classList.add('is-drawn');
-        });
-      }, { threshold: .25 });
-      donuts.forEach(d => donutIO.observe(d));
-    } else if (donuts.length) {
-      donuts.forEach(d => d.classList.add('is-drawn'));
-    }
-  } catch (e) { /* non-critical */ }
+  /* Donut rings are now pure CSS conic-gradient with their own entrance
+     keyframe (donutSweep). No JS needed for them to render or animate. */
 
   /* ---------- Floating action — scroll-to-top only ---------- */
   const fab = document.createElement('div');

@@ -222,14 +222,29 @@ header{position:fixed;top:16px;left:0;right:0;z-index:1000;padding:0;pointer-eve
 .hd-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:8px}
 .hd-card-h b{font-weight:800}
 .hd-card-trends{display:flex;flex-direction:column;justify-content:space-between;height:100%}
-.hd-chart-wrap{position:relative;width:100%;flex:1;min-height:145px;display:flex}
-.hd-chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;z-index:0}
-.hd-chart-grid span{display:block;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.08) 80%,transparent)}
-[data-theme="light"] .hd-chart-grid span{background:linear-gradient(90deg,transparent,rgba(11,22,38,.08) 20%,rgba(11,22,38,.08) 80%,transparent)}
+.hd-chart-wrap{position:relative;width:100%;flex:1;min-height:145px;display:flex;align-items:stretch}
+/* Dashed reference lines at 100%, 95%, 90% of the plot area. */
+.hd-chart-grid{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hd-grid-line{position:absolute;left:0;right:0;height:0;border-top:1px dashed rgba(148,163,184,.26)}
+.hd-grid-line[data-pct="100"]{top:0}
+.hd-grid-line[data-pct="95"]{top:5%}
+.hd-grid-line[data-pct="90"]{top:10%}
+.hd-grid-line::after{content:attr(data-pct) "%";position:absolute;right:0;top:-6px;padding:1px 4px;background:transparent;color:var(--muted);font-size:8.5px;font-weight:700;letter-spacing:.04em;opacity:.7}
+[data-theme="light"] .hd-grid-line{border-top-color:rgba(100,116,139,.35)}
+[data-theme="light"] .hd-grid-line::after{color:#64748B}
 .hd-chart{position:relative;display:flex;align-items:flex-end;gap:10px;height:100%;width:100%;z-index:1;flex:1}
+/* Overlay SVG trend line + peak dot. preserveAspectRatio=none means the
+   viewBox (0 0 100 100) stretches to the wrap's actual pixel size, so we can
+   map percentage-based coordinates directly. */
+.hd-trend{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+.hd-trend-line{filter:drop-shadow(0 0 4px rgba(255,107,129,.55));opacity:.95}
+.hd-trend-peak{filter:drop-shadow(0 0 5px rgba(230,0,22,.75));transform-box:view-box;transform-origin:center;animation:trendPeakPulse 1.8s ease-in-out infinite}
+@keyframes trendPeakPulse{0%,100%{opacity:1}50%{opacity:.6}}
+@media(prefers-reduced-motion:reduce){.hd-trend-peak{animation:none}}
 .hd-chart-labels{display:flex;gap:10px;margin-top:10px;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.04em}
 .hd-chart-labels span{flex:1;text-align:center;min-width:0}
-.hd-card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:600}
+.hd-card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2);color:var(--muted);font-size:11px;font-weight:600;flex-wrap:wrap}
+.hd-card-foot>span{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap}
 .hd-card-foot b{color:var(--ink);font-weight:800}
 [data-theme="light"] .hd-card-foot{border-top-color:#CBD5E1;color:#475569}
 [data-theme="light"] .hd-card-foot b{color:#0B1526}
@@ -783,11 +798,32 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 .hd-card{min-height:148px}
 .hd-card-h span{color:var(--muted);font-size:10px}
 .hd-chart{height:86px}
-.donut-row{display:flex;align-items:center;gap:20px;min-height:105px}
-.donut{width:104px;height:104px;flex:none;position:relative;display:grid;place-items:center;background:transparent}
-.donut-center{display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1;pointer-events:none}
-.donut-center b{font-size:19px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
-.donut-center em{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-style:normal}
+.donut-row{display:flex;align-items:center;gap:20px;min-height:112px}
+/* Rock-solid conic-gradient rings with a themed inner cutout. Guaranteed to
+   render vibrantly in every browser, in both themes, without stroke math. */
+.donut{
+  width:112px;height:112px;flex:none;position:relative;border-radius:50%;
+  display:grid;place-items:center;
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  animation:donutSweep .9s cubic-bezier(.22,1,.36,1) both;
+}
+.donut.department{background:conic-gradient(#E60016 0% 42%,#FF6B81 42% 77%,#3B82F6 77% 100%)}
+.donut.leave{background:conic-gradient(#E60016 0% 76%,#FF6B81 76% 92%,#64748B 92% 100%)}
+.donut-inner{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  width:76px;height:76px;border-radius:50%;
+  background:#0B1322;color:#fff;line-height:1;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.donut-inner b{font-size:20px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.donut-inner em{font-size:9px;font-weight:700;color:#93A3B8;text-transform:uppercase;letter-spacing:.1em;font-style:normal}
+[data-theme="light"] .donut{box-shadow:0 10px 24px rgba(11,22,38,.14)}
+[data-theme="light"] .donut-inner{background:#FFFFFF}
+[data-theme="light"] .donut-inner b{color:#0B1526}
+[data-theme="light"] .donut-inner em{color:#475569}
+@keyframes donutSweep{from{transform:scale(.85) rotate(-18deg);opacity:0;filter:saturate(.6)}to{transform:scale(1) rotate(0);opacity:1;filter:saturate(1)}}
+@media(prefers-reduced-motion:reduce){.donut{animation:none}}
 .donut-row ul{list-style:none;padding:0;margin:0;flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
 .donut-row li{display:flex;align-items:center;gap:8px;margin:0;color:var(--muted);font-size:11.5px;font-weight:600}
 .donut-row li i{width:9px;height:9px;flex:none;border-radius:50%;background:#E60016;box-shadow:0 0 0 2px rgba(230,0,22,.14)}
@@ -1016,24 +1052,6 @@ footer{position:relative;margin-top:0;background:var(--bg-2);border-top:1px soli
 [data-theme="light"] .side-item:hover{background:rgba(11,22,38,.04);color:#0B1526}
 
 .donut{position:relative;overflow:hidden;border-radius:50%}
-.donut.department,.donut.leave{background:transparent}
-.donut-svg{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
-/* Track + segment strokes are set directly in the SVG markup; CSS only
-   provides the safety net (transform-box + transform-origin so no stray CSS
-   transform can shift the arc) and a gentle opacity fade-in on scroll. No
-   rule here overrides stroke, dasharray, or dashoffset. */
-.donut-ring{transform-box:fill-box;transform-origin:center}
-.donut-seg{
-  stroke-opacity:1;
-  transform-box:fill-box;
-  transform-origin:center;
-  transform:none;
-  transition:stroke-opacity .6s ease;
-}
-.donut:not(.is-drawn) .donut-seg{stroke-opacity:1}
-@media(prefers-reduced-motion:reduce){
-  .donut-seg{transition:none}
-}
 
 /* Floating badges gentle levitation already uses @keyframes float.
    Make them more cohesive. */
